@@ -1,0 +1,60 @@
+{
+  "name": "lexical-blog-editor",
+  "version": "1.0.0",
+  "description": "Prebuilt components for editing and rendering rich blog content with Lexical.",
+  "main": "./build/index.js",
+  "types": "./build/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./build/index.d.ts",
+      "import": "./build/index.js",
+      "require": "./build/index.js"
+    },
+    "./editor": {
+      "types": "./build/editor/index.d.ts",
+      "import": "./build/editor/index.js",
+      "require": "./build/editor/index.js"
+    },
+    "./viewer": {
+      "types": "./build/viewer/index.d.ts",
+      "import": "./build/viewer/index.js",
+      "require": "./build/viewer/index.js"
+    }
+  },
+  "files": [
+    "build"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "lexical",
+    "editor",
+    "react",
+    "blog",
+    "rich-text"
+  ],
+  "author": "",
+  "license": "ISC",
+  "peerDependencies": {
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
+  },
+  "dependencies": {
+    "lexical": "^0.13.0",
+    "@lexical/react": "^0.13.0",
+    "@lexical/rich-text": "^0.13.0",
+    "@lexical/utils": "^0.13.0",
+    "@lexical/list": "^0.13.0",
+    "@lexical/code": "^0.13.0",
+    "@lexical/link": "^0.13.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "typescript": "^5.0.0"
+  }
+}
