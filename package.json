@@ -45,7 +45,10 @@
     "lexical": "^0.13.0",
     "@lexical/react": "^0.13.0",
     "@lexical/rich-text": "^0.13.0",
-    "@lexical/utils": "^0.13.0"
+    "@lexical/utils": "^0.13.0",
+    "@lexical/list": "^0.13.0",
+    "@lexical/code": "^0.13.0",
+    "@lexical/link": "^0.13.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.0",

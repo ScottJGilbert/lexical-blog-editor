@@ -9,6 +9,7 @@ import { CodeNode, CodeHighlightNode } from '@lexical/code';
 import { LinkNode } from '@lexical/link';
 
 export interface ViewerProps {
+  /** Content to display - JSON string of serialized EditorState */
   content: string;
 }
 
