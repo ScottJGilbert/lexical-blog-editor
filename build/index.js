@@ -1,2 +1,2 @@
-export { Editor } from './editor';
-export { Viewer } from './viewer';
+export { Editor } from "./Editor";
+export { Editor as default } from "./Editor";

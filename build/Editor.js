@@ -1,0 +1,122 @@
+"use client";
+import { jsx as _jsx, Fragment as _Fragment, jsxs as _jsxs } from "react/jsx-runtime";
+import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
+import { LexicalErrorBoundary } from "@lexical/react/LexicalErrorBoundary";
+import { AutoFocusPlugin } from "@lexical/react/LexicalAutoFocusPlugin";
+import { CheckListPlugin } from "@lexical/react/LexicalCheckListPlugin";
+import { ClearEditorPlugin } from "@lexical/react/LexicalClearEditorPlugin";
+import { ClickableLinkPlugin } from "@lexical/react/LexicalClickableLinkPlugin";
+import { HashtagPlugin } from "@lexical/react/LexicalHashtagPlugin";
+import { HorizontalRulePlugin } from "@lexical/react/LexicalHorizontalRulePlugin";
+import { ListPlugin } from "@lexical/react/LexicalListPlugin";
+import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
+import { TabIndentationPlugin } from "@lexical/react/LexicalTabIndentationPlugin";
+import { TablePlugin } from "@lexical/react/LexicalTablePlugin";
+import { useLexicalEditable } from "@lexical/react/useLexicalEditable";
+import { CAN_USE_DOM } from "@lexical/utils";
+import { useEffect, useState } from "react";
+/* Custom Plugins */
+import ActionsPlugin from "./plugins/ActionsPlugin";
+import AutoEmbedPlugin from "./plugins/AutoEmbedPlugin";
+import AutoLinkPlugin from "./plugins/AutoLinkPlugin";
+import CodeActionMenuPlugin from "./plugins/CodeActionMenuPlugin";
+// import CodeHighlightPrismPlugin from "./plugins/CodeHighlightPrismPlugin";
+import CodeHighlightShikiPlugin from "./plugins/CodeHighlightShikiPlugin";
+import CollapsiblePlugin from "./plugins/CollapsiblePlugin";
+import ComponentPickerPlugin from "./plugins/ComponentPickerPlugin";
+import DateTimePlugin from "./plugins/DateTimePlugin";
+import DragDropPaste from "./plugins/DragDropPastePlugin";
+import DraggableBlockPlugin from "./plugins/DraggableBlockPlugin";
+import EmojiPickerPlugin from "./plugins/EmojiPickerPlugin";
+import EmojisPlugin from "./plugins/EmojisPlugin";
+import EquationsPlugin from "./plugins/EquationsPlugin";
+import FigmaPlugin from "./plugins/FigmaPlugin";
+import FloatingLinkEditorPlugin from "./plugins/FloatingLinkEditorPlugin";
+import FloatingTextFormatToolbarPlugin from "./plugins/FloatingTextFormatToolbarPlugin";
+import ImagesPlugin from "./plugins/ImagesPlugin";
+import KeywordsPlugin from "./plugins/KeywordsPlugin";
+import { LayoutPlugin } from "./plugins/LayoutPlugin/LayoutPlugin";
+import LinkPlugin from "./plugins/LinkPlugin";
+import MarkdownShortcutPlugin from "./plugins/MarkdownShortcutPlugin";
+import MentionsPlugin from "./plugins/MentionsPlugin";
+import PageBreakPlugin from "./plugins/PageBreakPlugin";
+import ShortcutsPlugin from "./plugins/ShortcutsPlugin";
+import SpeechToTextPlugin from "./plugins/SpeechToTextPlugin";
+import TabFocusPlugin from "./plugins/TabFocusPlugin";
+import TableCellActionMenuPlugin from "./plugins/TableActionMenuPlugin";
+import TableCellResizer from "./plugins/TableCellResizer";
+import TableHoverActionsV2Plugin from "./plugins/TableHoverActionsV2Plugin";
+import TableScrollShadowPlugin from "./plugins/TableScrollShadowPlugin";
+import ToolbarPlugin from "./plugins/ToolbarPlugin";
+import TwitterPlugin from "./plugins/TwitterPlugin";
+import YouTubePlugin from "./plugins/YouTubePlugin";
+import ContentEditable from "./ui/ContentEditable";
+import { $createHeadingNode } from "@lexical/rich-text";
+import { $getRoot, $createParagraphNode, defineExtension, $createTextNode, } from "lexical";
+import { LexicalExtensionComposer } from "@lexical/react/LexicalExtensionComposer";
+import { TableContext } from "./plugins/TablePlugin";
+import { ToolbarContext } from "./context/ToolbarContext";
+import { useMemo } from "react";
+import PlaygroundEditorTheme from "./themes/PlaygroundEditorTheme";
+import PlaygroundNodes from "./nodes/PlaygroundNodes";
+import { buildHTMLConfig } from "./buildHTMLConfig";
+import "./index.css";
+import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
+function $prepopulatedRichText() {
+    const root = $getRoot();
+    const heading = $createHeadingNode("h1");
+    heading.append($createTextNode("Lexical Rich Text Editor"));
+    root.append(heading);
+    const paragraph = $createParagraphNode();
+    paragraph.append($createTextNode("Welcome to the Lexical rich text editor!"));
+    root.append(paragraph);
+}
+export const EditorComponent = ({ placeholder = "Enter some text...", onChange, }) => {
+    const isEditable = useLexicalEditable();
+    const [floatingAnchorElem, setFloatingAnchorElem] = useState(null);
+    const [isSmallWidthViewport, setIsSmallWidthViewport] = useState(false);
+    const [editor] = useLexicalComposerContext();
+    const [activeEditor, setActiveEditor] = useState(editor);
+    const [isLinkEditMode, setIsLinkEditMode] = useState(false);
+    const onRef = (_floatingAnchorElem) => {
+        if (_floatingAnchorElem !== null) {
+            setFloatingAnchorElem(_floatingAnchorElem);
+        }
+    };
+    function OnChangePlugin({ onChange, }) {
+        const [editor] = useLexicalComposerContext();
+        // Wrap our listener in useEffect to handle the teardown and avoid stale references.
+        useEffect(() => {
+            // most listeners return a teardown function that can be called to clean them up.
+            return editor.registerUpdateListener(({ editorState }) => {
+                onChange(editorState);
+            });
+        }, [editor, onChange]);
+        return null;
+    }
+    useEffect(() => {
+        const updateViewPortWidth = () => {
+            const isNextSmallWidthViewport = CAN_USE_DOM && window.matchMedia("(max-width: 1025px)").matches;
+            if (isNextSmallWidthViewport !== isSmallWidthViewport) {
+                setIsSmallWidthViewport(isNextSmallWidthViewport);
+            }
+        };
+        updateViewPortWidth();
+        window.addEventListener("resize", updateViewPortWidth);
+        return () => {
+            window.removeEventListener("resize", updateViewPortWidth);
+        };
+    }, [isSmallWidthViewport]);
+    return (_jsxs(_Fragment, { children: [_jsx(ToolbarPlugin, { editor: editor, activeEditor: activeEditor, setActiveEditor: setActiveEditor, setIsLinkEditMode: setIsLinkEditMode }), _jsx(ShortcutsPlugin, { editor: activeEditor, setIsLinkEditMode: setIsLinkEditMode }), _jsxs("div", { className: `editor-container`, children: [_jsx(DragDropPaste, {}), _jsx(AutoFocusPlugin, {}), _jsx(ClearEditorPlugin, {}), _jsx(ComponentPickerPlugin, {}), _jsx(EmojiPickerPlugin, {}), _jsx(AutoEmbedPlugin, {}), _jsx(MentionsPlugin, {}), _jsx(EmojisPlugin, {}), _jsx(HashtagPlugin, {}), _jsx(KeywordsPlugin, {}), _jsx(SpeechToTextPlugin, {}), _jsx(AutoLinkPlugin, {}), _jsx(DateTimePlugin, {}), _jsx(HistoryPlugin, {}), _jsx(RichTextPlugin, { contentEditable: _jsx("div", { className: "editor-scroller", children: _jsx("div", { className: "editor", ref: onRef, children: _jsx(ContentEditable, { placeholder: placeholder }) }) }), ErrorBoundary: LexicalErrorBoundary }), _jsx(OnChangePlugin, { onChange: onChange }), _jsx(MarkdownShortcutPlugin, {}), _jsx(CodeHighlightShikiPlugin, {}), " ", _jsx(ListPlugin, { hasStrictIndent: true }), _jsx(CheckListPlugin, {}), _jsx(TablePlugin, {}), _jsx(TableCellResizer, {}), _jsx(TableScrollShadowPlugin, {}), _jsx(ImagesPlugin, {}), _jsx(LinkPlugin, { hasLinkAttributes: true }), _jsx(TwitterPlugin, {}), _jsx(YouTubePlugin, {}), _jsx(FigmaPlugin, {}), _jsx(ClickableLinkPlugin, { disabled: isEditable }), _jsx(HorizontalRulePlugin, {}), _jsx(EquationsPlugin, {}), _jsx(TabFocusPlugin, {}), _jsx(TabIndentationPlugin, { maxIndent: 7 }), _jsx(CollapsiblePlugin, {}), _jsx(PageBreakPlugin, {}), _jsx(LayoutPlugin, {}), floatingAnchorElem && (_jsxs(_Fragment, { children: [_jsx(FloatingLinkEditorPlugin, { anchorElem: floatingAnchorElem, isLinkEditMode: isLinkEditMode, setIsLinkEditMode: setIsLinkEditMode }), _jsx(TableCellActionMenuPlugin, { anchorElem: floatingAnchorElem, cellMerge: true })] })), floatingAnchorElem && !isSmallWidthViewport && (_jsxs(_Fragment, { children: [_jsx(DraggableBlockPlugin, { anchorElem: floatingAnchorElem }), _jsx(CodeActionMenuPlugin, { anchorElem: floatingAnchorElem }), _jsx(TableHoverActionsV2Plugin, { anchorElem: floatingAnchorElem }), _jsx(FloatingTextFormatToolbarPlugin, { anchorElem: floatingAnchorElem, setIsLinkEditMode: setIsLinkEditMode })] })), _jsx(ActionsPlugin, { shouldPreserveNewLinesInMarkdown: true, useCollabV2: false })] }), " "] }));
+};
+export const Editor = ({ placeholder = "Enter some text...", initialState, onChange, }) => {
+    const app = useMemo(() => defineExtension({
+        $initialEditorState: initialState !== null && initialState !== void 0 ? initialState : $prepopulatedRichText,
+        html: buildHTMLConfig(),
+        name: "BlogEditor",
+        namespace: "BlogEditor",
+        nodes: PlaygroundNodes,
+        theme: PlaygroundEditorTheme,
+    }), [initialState]);
+    return (_jsx("div", { className: "full-blog-editor-wrapper", children: _jsx(LexicalExtensionComposer, { extension: app, contentEditable: null, children: _jsx(TableContext, { children: _jsx(ToolbarContext, { children: _jsx(EditorComponent, { placeholder: placeholder, onChange: onChange }) }) }) }) }));
+};

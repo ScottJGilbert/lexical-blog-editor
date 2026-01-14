@@ -1,21 +1,35 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
-    "module": "ESNext",
-    "lib": ["ES2020", "DOM"],
-    "jsx": "react",
-    "declaration": true,
-    "declarationMap": true,
-    "outDir": "./build",
-    "rootDir": "./src",
+    "target": "ES2017",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
     "strict": true,
     "esModuleInterop": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "moduleResolution": "node",
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "declaration": true,
+    "declarationMap": true,
     "resolveJsonModule": true,
-    "isolatedModules": true
+    "isolatedModules": true,
+    "jsx": "react-jsx",
+    "incremental": true,
+    "rootDir": "./src",
+    "outDir": "./build",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "build"]
+  "include": [
+    "src",
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.mts",
+    "**/*.css",
+    "**/*.gif",
+    "**/*.jpg",
+    "**/*.png",
+    "**/*.svg"
+  ],
+  "exclude": ["node_modules", "srcOld", "build"]
 }

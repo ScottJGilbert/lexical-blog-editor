@@ -1,0 +1,1 @@
+{"version":3,"file":"index.d.ts","sourceRoot":"","sources":["../../../src/plugins/ActionsPlugin/index.tsx"],"names":[],"mappings":"AAAA;;;;;;GAMG;AAGH,OAAO,KAAK,EAAE,GAAG,EAAE,MAAM,OAAO,CAAC;AAiEjC,MAAM,CAAC,OAAO,UAAU,aAAa,CAAC,EACpC,gCAAgC,EAChC,WAAW,GACZ,EAAE;IACD,gCAAgC,EAAE,OAAO,CAAC;IAC1C,WAAW,EAAE,OAAO,CAAC;CACtB,GAAG,GAAG,CAAC,OAAO,CAkKd"}
