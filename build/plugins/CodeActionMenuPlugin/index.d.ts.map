@@ -1,0 +1,1 @@
+{"version":3,"file":"index.d.ts","sourceRoot":"","sources":["../../../src/plugins/CodeActionMenuPlugin/index.tsx"],"names":[],"mappings":"AAAA;;;;;;GAMG;AAIH,OAAO,aAAa,CAAC;AAWrB,OAAO,KAAK,KAAK,MAAM,OAAO,CAAC;AAiK/B,MAAM,CAAC,OAAO,UAAU,oBAAoB,CAAC,EAC3C,UAA0B,GAC3B,EAAE;IACD,UAAU,CAAC,EAAE,WAAW,CAAC;CAC1B,GAAG,KAAK,CAAC,WAAW,GAAG,IAAI,CAK3B"}

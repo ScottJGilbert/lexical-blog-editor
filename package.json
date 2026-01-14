@@ -1,7 +1,7 @@
 {
   "name": "lexical-blog-editor",
-  "version": "1.0.0",
-  "description": "Prebuilt components for editing and rendering rich blog content with Lexical.",
+  "version": "0.1.0",
+  "description": "Prebuilt components for editing and rendering rich blog content with Lexical. Modified wrapper of the Lexical Playground editor.",
   "main": "./build/index.js",
   "types": "./build/index.d.ts",
   "exports": {
@@ -9,24 +9,15 @@
       "types": "./build/index.d.ts",
       "import": "./build/index.js",
       "require": "./build/index.js"
-    },
-    "./editor": {
-      "types": "./build/editor/index.d.ts",
-      "import": "./build/editor/index.js",
-      "require": "./build/editor/index.js"
-    },
-    "./viewer": {
-      "types": "./build/viewer/index.d.ts",
-      "import": "./build/viewer/index.js",
-      "require": "./build/viewer/index.js"
     }
   },
   "files": [
     "build"
   ],
   "scripts": {
-    "build": "tsc",
-    "prepublishOnly": "npm run build"
+    "build": "tsc && pnpm run copy-assets",
+    "copy-assets": "copyfiles -u 1 \"src/**/*.{css,png,jpg,jpeg,gif,svg,webp}\" build/",
+    "prepublishOnly": "pnpm run build"
   },
   "keywords": [
     "lexical",
@@ -35,26 +26,51 @@
     "blog",
     "rich-text"
   ],
-  "author": "",
+  "author": "Scott Gilbert",
   "license": "ISC",
-  "peerDependencies": {
-    "react": "^18.0.0",
-    "react-dom": "^18.0.0"
-  },
   "dependencies": {
-    "lexical": "^0.13.0",
-    "@lexical/react": "^0.13.0",
-    "@lexical/rich-text": "^0.13.0",
-    "@lexical/utils": "^0.13.0",
-    "@lexical/list": "^0.13.0",
-    "@lexical/code": "^0.13.0",
-    "@lexical/link": "^0.13.0"
+    "@floating-ui/react": "^0.27.16",
+    "@lexical/clipboard": "^0.39.0",
+    "@lexical/code": "^0.39.0",
+    "@lexical/code-shiki": "^0.39.0",
+    "@lexical/file": "^0.39.0",
+    "@lexical/hashtag": "^0.39.0",
+    "@lexical/html": "^0.39.0",
+    "@lexical/link": "^0.39.0",
+    "@lexical/list": "^0.39.0",
+    "@lexical/mark": "^0.39.0",
+    "@lexical/markdown": "^0.39.0",
+    "@lexical/overflow": "^0.39.0",
+    "@lexical/react": "^0.39.0",
+    "@lexical/rich-text": "^0.39.0",
+    "@lexical/selection": "^0.39.0",
+    "@lexical/table": "^0.39.0",
+    "@lexical/utils": "^0.39.0",
+    "@lexical/yjs": "^0.39.0",
+    "date-fns": "^4.1.0",
+    "katex": "^0.16.27",
+    "lexical": "^0.39.0",
+    "lodash": "^4.17.21",
+    "lodash-es": "^4.17.22",
+    "prettier": "^3.7.4",
+    "react": "19.2.3",
+    "react-day-picker": "^9.13.0",
+    "react-dom": "19.2.3",
+    "react-error-boundary": "^6.0.3",
+    "y-websocket": "^3.0.0",
+    "yjs": "^13.6.29"
   },
   "devDependencies": {
-    "@types/react": "^18.2.0",
-    "@types/react-dom": "^18.2.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "typescript": "^5.0.0"
-  }
+    "@tailwindcss/postcss": "^4",
+    "@types/lodash": "^4.17.23",
+    "@types/lodash-es": "^4.17.12",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "copyfiles": "^2.4.1",
+    "eslint": "^9",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  },
+  "packageManager": "pnpm@10.28.0+sha512.05df71d1421f21399e053fde567cea34d446fa02c76571441bfc1c7956e98e363088982d940465fd34480d4d90a0668bc12362f8aa88000a64e83d0b0e47be48"
 }

@@ -1,0 +1,1 @@
+{"version":3,"file":"index.d.ts","sourceRoot":"","sources":["../../../src/plugins/TableActionMenuPlugin/index.tsx"],"names":[],"mappings":"AAAA;;;;;;GAMG;AA0CH,OAAO,EAAC,WAAW,EAA2C,MAAM,OAAO,CAAC;AAw2B5E,MAAM,CAAC,OAAO,UAAU,qBAAqB,CAAC,EAC5C,UAA0B,EAC1B,SAAiB,GAClB,EAAE;IACD,UAAU,CAAC,EAAE,WAAW,CAAC;IACzB,SAAS,CAAC,EAAE,OAAO,CAAC;CACrB,GAAG,IAAI,GAAG,WAAW,CAWrB"}
