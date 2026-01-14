@@ -1,6 +1,6 @@
 {
   "name": "lexical-blog-editor",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Prebuilt components for editing and rendering rich blog content with Lexical. Modified wrapper of the Lexical Playground editor.",
   "main": "./build/index.js",
   "types": "./build/index.d.ts",
