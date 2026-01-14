@@ -1,5 +1,4 @@
-# Package manager lockfiles
-package-lock.json
+# Non-npm lockfiles
 yarn.lock
 pnpm-lock.yaml
 
