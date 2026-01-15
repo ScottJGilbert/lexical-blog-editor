@@ -22,4 +22,4 @@ jobs:
           registry-url: https://registry.npmjs.org/
           cache: "pnpm"
       - run: pnpm install --frozen-lockfile
-      - run: pnpm publish --no-git-checks --access public ${{ github.event.release.prerelease && '--tag beta' || '' }}
+      - run: pnpm publish --provenance --no-git-checks --access public ${{ github.event.release.prerelease && '--tag beta' || '' }}
