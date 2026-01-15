@@ -1,6 +1,7 @@
-# Non-pnpm lockfiles
+# Non-npm lockfiles
 yarn.lock
-package-lock.json
+pnpm-lock.yaml
+pnpm-workspace.yaml
 
 # Logs
 logs
