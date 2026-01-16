@@ -23,7 +23,6 @@ This package requires the following peer dependencies:
 
 - React 18.0.0 or higher
 - React DOM 18.0.0 or higher
-- Lexical 0.39.0 or higher
 
 ## Usage
 
@@ -31,7 +30,7 @@ This package requires the following peer dependencies:
 
 ```tsx
 import { Editor } from "@scottjgilbert/lexical-blog-editor";
-import type { EditorState } from "lexical";
+import type { EditorState } from "@scottjgilbert/lexical-blog-editor";
 
 function MyBlogEditor() {
   const handleChange = (editorState: EditorState) => {
@@ -56,7 +55,7 @@ function MyBlogEditor() {
 
 ```tsx
 import { Editor } from "@scottjgilbert/lexical-blog-editor";
-import type { EditorState } from "lexical";
+import type { EditorState } from "@scottjgilbert/lexical-blog-editor";
 
 function MyBlogEditor({ savedContent }: { savedContent?: EditorState }) {
   const handleChange = (editorState: EditorState) => {
