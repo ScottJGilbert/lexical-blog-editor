@@ -333,7 +333,7 @@
   cursor: pointer;
 }
 .PlaygroundEditorTheme__tableAddColumns:after {
-  background-image: url(../images/icons/plus.svg);
+  background-image: url(./images/icons/plus.svg);
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
@@ -359,7 +359,7 @@
   cursor: pointer;
 }
 .PlaygroundEditorTheme__tableAddRows:after {
-  background-image: url(../images/icons/plus.svg);
+  background-image: url(./images/icons/plus.svg);
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
@@ -678,92 +678,72 @@
   background-size: contain;
 }
 
-/* Dark mode overrides */
 @media (prefers-color-scheme: dark) {
   .PlaygroundEditorTheme__quote {
     color: rgb(154, 158, 165);
     border-left-color: rgb(99, 102, 107);
   }
-
   .PlaygroundEditorTheme__h1 {
     color: rgb(229, 229, 229);
   }
-
   .PlaygroundEditorTheme__h2 {
     color: rgb(154, 158, 165);
   }
-
   .PlaygroundEditorTheme__textHighlight {
     background: rgba(255, 212, 0, 0.2);
     border-bottom: 2px solid rgba(255, 212, 0, 0.5);
   }
-
   .PlaygroundEditorTheme__textCode {
     background-color: rgb(45, 45, 48);
   }
-
   .PlaygroundEditorTheme__hashtag {
     background-color: rgba(88, 144, 255, 0.25);
     border-bottom: 1px solid rgba(88, 144, 255, 0.5);
   }
-
   .PlaygroundEditorTheme__link {
     color: rgb(88, 166, 255);
   }
-
   .PlaygroundEditorTheme__blockCursor:after {
     border-top: 1px solid white;
   }
-
   .PlaygroundEditorTheme__code {
     background-color: rgb(45, 45, 48);
   }
-
   .PlaygroundEditorTheme__code:before {
     background-color: #333;
     border-right: 1px solid #555;
     color: #aaa;
   }
-
   .PlaygroundEditorTheme__tableScrollRight {
     box-shadow: inset -10px 0 10px rgba(255, 255, 255, 0.15);
   }
-
   .PlaygroundEditorTheme__tableScrollLeft {
     box-shadow: inset 10px 0 10px rgba(255, 255, 255, 0.15);
   }
-
   .PlaygroundEditorTheme__tableScrollMiddle {
     box-shadow:
       inset 10px 0 10px rgba(255, 255, 255, 0.15),
       inset -10px 0 10px rgba(255, 255, 255, 0.15);
   }
-
   .PlaygroundEditorTheme__tableFrozenRow tr:nth-of-type(1) > td {
     background-color: #1e1e1e;
   }
-
   .PlaygroundEditorTheme__tableFrozenRow tr:nth-of-type(1) > th {
     background-color: #2d2d2d;
   }
-
   .PlaygroundEditorTheme__tableFrozenRow tr:nth-of-type(1) > th:after,
   .PlaygroundEditorTheme__tableFrozenRow tr:nth-of-type(1) > td:after {
     border-bottom: 1px solid #444;
   }
-
   .PlaygroundEditorTheme__tableFrozenColumn tr > td:first-child {
     background-color: #1e1e1e;
   }
-
   .PlaygroundEditorTheme__tableFrozenColumn tr > th:first-child {
     background-color: #2d2d2d;
   }
-
   .PlaygroundEditorTheme__tableFrozenColumn tr > :first-child::after {
     border-right: 1px solid #444;
   }
-
   .PlaygroundEditorTheme__tableRowStriping tr:nth-child(even),
   .PlaygroundEditorTheme__tableFrozenColumn
     .PlaygroundEditorTheme__table.PlaygroundEditorTheme__tableRowStriping
@@ -771,177 +751,137 @@
     > td:first-child {
     background-color: #2a2a3a;
   }
-
   .PlaygroundEditorTheme__tableSelected {
     outline: 2px solid rgb(88, 166, 255);
   }
-
   .PlaygroundEditorTheme__tableCell {
-    border: 1px solid #888;
+    border: 1px solid #444;
   }
-
   .PlaygroundEditorTheme__tableCellHeader {
-    background-color: #3f3f3f;
+    background-color: #2d2d2d;
   }
-
   .PlaygroundEditorTheme__tableAddColumns {
     background-color: #333;
   }
-
   .PlaygroundEditorTheme__tableAddColumns:hover,
   .PlaygroundEditorTheme__tableAddRows:hover {
     background-color: #3a4a5a;
   }
-
   .PlaygroundEditorTheme__tableAddRows {
     background-color: #333;
   }
-
   .PlaygroundEditorTheme__tableCellResizeRuler {
     background-color: rgb(88, 166, 255);
   }
-
   .PlaygroundEditorTheme__tableCellActionButton {
     background-color: #333;
     color: #ddd;
   }
-
   .PlaygroundEditorTheme__tableCellActionButton:hover {
     background-color: #444;
   }
-
   .PlaygroundEditorTheme__characterLimit {
     background-color: #663333 !important;
   }
-
   .PlaygroundEditorTheme__listItemUnchecked:focus:before,
   .PlaygroundEditorTheme__listItemChecked:focus:before {
     box-shadow: 0 0 0 2px #4a5f8f;
   }
-
   .PlaygroundEditorTheme__listItemUnchecked:before {
     border: 1px solid #666;
   }
-
   .PlaygroundEditorTheme__listItemChecked:before {
     border: 1px solid rgb(88, 166, 255);
     background-color: #5a9aff;
   }
-
   .PlaygroundEditorTheme__listItemChecked:after {
     border-color: #1e1e1e;
   }
-
   .PlaygroundEditorTheme__tokenComment {
     color: #7a8f8f;
   }
-
   .PlaygroundEditorTheme__tokenDeleted {
     border-image: linear-gradient(to right, #663333 50%, #552222 50%) fill 0/0/0
       100vw;
   }
-
   .PlaygroundEditorTheme__tokenInserted {
     border-image: linear-gradient(to right, #336633 50%, #224422 50%) fill 0/0/0
       100vw;
   }
-
   .PlaygroundEditorTheme__tokenUnchanged {
     border-image: linear-gradient(to right, #444 50%, #333 50%) fill 0/0/0 100vw;
   }
-
   .PlaygroundEditorTheme__tokenPunctuation {
     color: #777;
   }
-
   .PlaygroundEditorTheme__tokenProperty {
     color: #d88fb3;
   }
-
   .PlaygroundEditorTheme__tokenSelector {
     color: #99dd66;
   }
-
   .PlaygroundEditorTheme__tokenOperator {
     color: #d4a574;
   }
-
   .PlaygroundEditorTheme__tokenAttr {
     color: #58aaff;
   }
-
   .PlaygroundEditorTheme__tokenVariable {
     color: #ffbb22;
   }
-
   .PlaygroundEditorTheme__tokenFunction {
     color: #ff6b88;
   }
-
   .PlaygroundEditorTheme__mark {
     background: rgba(255, 212, 0, 0.2);
     border-bottom: 2px solid rgba(255, 212, 0, 0.5);
   }
-
   .PlaygroundEditorTheme__markOverlap {
     background: rgba(255, 212, 0, 0.4);
     border-bottom: 2px solid rgba(255, 212, 0, 0.6);
   }
-
   .PlaygroundEditorTheme__mark.selected {
     background: rgba(255, 212, 0, 0.3);
     border-bottom: 2px solid rgba(255, 212, 0, 0.7);
   }
-
   .PlaygroundEditorTheme__markOverlap.selected {
     background: rgba(255, 212, 0, 0.4);
     border-bottom: 2px solid rgba(255, 212, 0, 0.6);
   }
-
   .PlaygroundEditorTheme__embedBlockFocus {
     outline: 2px solid rgb(88, 166, 255);
   }
-
   .PlaygroundEditorTheme__layoutItem {
     border: 1px dashed #444;
   }
-
   .PlaygroundEditorTheme__autocomplete {
     color: #666;
   }
-
   .PlaygroundEditorTheme__hr:after {
     background-color: #555;
   }
-
   .PlaygroundEditorTheme__hr.PlaygroundEditorTheme__hrSelected {
     outline: 2px solid rgb(88, 166, 255);
   }
-
   .PlaygroundEditorTheme__specialText {
     background-color: #664400;
   }
-
   .PlaygroundEditorTheme__contextMenu {
     background: #1e1e1e;
     border: 1px solid #444;
     box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.7);
   }
-
   .PlaygroundEditorTheme__contextMenuItem {
     background-color: #1e1e1e;
     color: #e0e0e0;
   }
-
   .PlaygroundEditorTheme__contextMenuItem.open {
     background: #333;
   }
-
   .PlaygroundEditorTheme__contextMenuItem:focus,
   .PlaygroundEditorTheme__contextMenuItem:not([disabled]):active {
     background: #2a2a2a;
   }
-
   .PlaygroundEditorTheme__contextMenuItem:disabled {
     background: #1e1e1e;
     color: #666;

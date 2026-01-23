@@ -34,7 +34,7 @@
   border-width: 4px 6px 4px 6px;
   border-left-color: #000;
   display: block;
-  content: '';
+  content: "";
   position: absolute;
   left: 7px;
   top: 50%;
@@ -54,4 +54,20 @@
 .Collapsible__collapsed .Collapsible__content {
   display: none;
   user-select: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  .Collapsible__container {
+    background: #2a2a2a;
+    border: 1px solid #444;
+  }
+  .Collapsible__title {
+    color: #ddd;
+  }
+  .Collapsible__title:before {
+    border-left-color: #ddd;
+  }
+  .Collapsible__container[open] > .Collapsible__title:before {
+    border-top-color: #ddd;
+  }
 }

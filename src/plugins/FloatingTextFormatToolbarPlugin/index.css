@@ -31,6 +31,7 @@
   padding: 8px;
   cursor: pointer;
   vertical-align: middle;
+  align-items: center;
 }
 
 .floating-text-format-popup button.popup-item:disabled {
@@ -76,6 +77,7 @@
   vertical-align: middle;
   -webkit-appearance: none;
   -moz-appearance: none;
+  appearance: none;
   width: 70px;
   font-size: 14px;
   color: #777;
@@ -137,5 +139,18 @@
 @media (max-width: 1024px) {
   .floating-text-format-popup button.insert-comment {
     display: none;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .floating-text-format-popup {
+    background: #2a2a2a;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.7);
+  }
+  .floating-text-format-popup button.popup-item:hover:not([disabled]) {
+    background-color: #3a3a3a;
+  }
+  .floating-text-format-popup .divider {
+    background-color: #3a3a3a;
   }
 }

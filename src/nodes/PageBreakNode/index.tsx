@@ -50,8 +50,8 @@ function PageBreakComponent({ nodeKey }: { nodeKey: NodeKey }) {
 
           return false;
         },
-        COMMAND_PRIORITY_LOW
-      )
+        COMMAND_PRIORITY_LOW,
+      ),
     );
   }, [clearSelection, editor, isSelected, nodeKey, setSelected]);
 
@@ -96,7 +96,7 @@ export class PageBreakNode extends DecoratorNode<JSX.Element> {
 
   createDOM(): HTMLElement {
     const el = document.createElement("figure");
-    el.style.pageBreakAfter = "always";
+    el.style.breakAfter = "always";
     el.setAttribute("type", this.getType());
     return el;
   }
@@ -127,7 +127,7 @@ export function $createPageBreakNode(): PageBreakNode {
 }
 
 export function $isPageBreakNode(
-  node: LexicalNode | null | undefined
+  node: LexicalNode | null | undefined,
 ): node is PageBreakNode {
   return node instanceof PageBreakNode;
 }

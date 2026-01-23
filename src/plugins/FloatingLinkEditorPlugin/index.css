@@ -39,3 +39,14 @@
   width: 20px;
   vertical-align: -0.25em;
 }
+
+@media (prefers-color-scheme: dark) {
+  .link-editor {
+    background-color: #2b2b2b;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.7);
+  }
+
+  .link-editor .button.hovered {
+    background-color: #3a3a3a;
+  }
+}

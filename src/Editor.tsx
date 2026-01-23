@@ -23,8 +23,7 @@ import ActionsPlugin from "./plugins/ActionsPlugin";
 import AutoEmbedPlugin from "./plugins/AutoEmbedPlugin";
 import AutoLinkPlugin from "./plugins/AutoLinkPlugin";
 import CodeActionMenuPlugin from "./plugins/CodeActionMenuPlugin";
-// import CodeHighlightPrismPlugin from "./plugins/CodeHighlightPrismPlugin";
-import CodeHighlightShikiPlugin from "./plugins/CodeHighlightShikiPlugin";
+import CodeHighlightPrismPlugin from "./plugins/CodeHighlightPrismPlugin";
 import CollapsiblePlugin from "./plugins/CollapsiblePlugin";
 import ComponentPickerPlugin from "./plugins/ComponentPickerPlugin";
 import DateTimePlugin from "./plugins/DateTimePlugin";
@@ -64,6 +63,8 @@ import {
   $createTextNode,
 } from "lexical";
 
+import { $generateHtmlFromNodes } from "@lexical/html";
+
 import { LexicalExtensionComposer } from "@lexical/react/LexicalExtensionComposer";
 import { TableContext } from "./plugins/TablePlugin";
 import { ToolbarContext } from "./context/ToolbarContext";
@@ -82,22 +83,22 @@ function $prepopulatedRichText(): void {
   heading.append($createTextNode("Lexical Rich Text Editor"));
   root.append(heading);
   const paragraph = $createParagraphNode();
-  paragraph.append($createTextNode("Welcome to the Lexical rich text editor!"));
+  paragraph.append($createTextNode("Welcome to the rich text editor!"));
   root.append(paragraph);
 }
 
-export type EditorProps = {
+export interface EditorProps {
   placeholder?: string;
   initialState?: EditorState;
-  onChange: (state: EditorState) => void;
-};
+  onChange: (state: EditorState, html: string) => void;
+}
 
 export const EditorComponent = ({
   placeholder = "Enter some text...",
   onChange,
 }: {
   placeholder?: string;
-  onChange: (state: EditorState) => void;
+  onChange: (state: EditorState, html: string) => void;
 }) => {
   const isEditable = useLexicalEditable();
 
@@ -118,14 +119,22 @@ export const EditorComponent = ({
   function OnChangePlugin({
     onChange,
   }: {
-    onChange: (state: EditorState) => void;
+    onChange: (state: EditorState, html: string) => void;
   }) {
     const [editor] = useLexicalComposerContext();
     // Wrap our listener in useEffect to handle the teardown and avoid stale references.
     useEffect(() => {
       // most listeners return a teardown function that can be called to clean them up.
       return editor.registerUpdateListener(({ editorState }) => {
-        onChange(editorState);
+        editor.read(() => {
+          onChange(
+            editorState,
+            //Need to modify generateHtml to auto-inject classes for styling
+            '<div class="lexical-blog-output">' +
+              $generateHtmlFromNodes(editor) +
+              "</div>",
+          );
+        });
       });
     }, [editor, onChange]);
     return null;
@@ -187,7 +196,7 @@ export const EditorComponent = ({
         />
         <OnChangePlugin onChange={onChange} />
         <MarkdownShortcutPlugin />
-        <CodeHighlightShikiPlugin /> {/* or <CodeHighlightPrismPlugin /> */}
+        <CodeHighlightPrismPlugin />
         <ListPlugin hasStrictIndent={true} />
         <CheckListPlugin />
         <TablePlugin />
@@ -239,6 +248,12 @@ export const EditorComponent = ({
   );
 };
 
+/**
+ * A full Rich Text Editor component.
+ * @param {EditorProps} props
+ * @returns {JSX.Element}
+ */
+
 export const Editor: React.FC<EditorProps> = ({
   placeholder = "Enter some text...",
   initialState,
@@ -254,11 +269,11 @@ export const Editor: React.FC<EditorProps> = ({
         nodes: PlaygroundNodes,
         theme: PlaygroundEditorTheme,
       }),
-    [initialState]
+    [initialState],
   );
 
   return (
-    <div className="full-blog-editor-wrapper">
+    <div className="editor-shell">
       <LexicalExtensionComposer extension={app} contentEditable={null}>
         <TableContext>
           <ToolbarContext>
