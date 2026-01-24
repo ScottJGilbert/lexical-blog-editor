@@ -1,3 +1,5 @@
+"use client";
+
 /**
  * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
@@ -22,7 +24,7 @@ import { useEffect, useRef, useState } from "react";
 import useReport from "../../hooks/useReport";
 
 export const SPEECH_TO_TEXT_COMMAND: LexicalCommand<boolean> = createCommand(
-  "SPEECH_TO_TEXT_COMMAND"
+  "SPEECH_TO_TEXT_COMMAND",
 );
 
 const VOICE_COMMANDS: Readonly<
@@ -43,9 +45,14 @@ const VOICE_COMMANDS: Readonly<
 };
 
 export const SUPPORT_SPEECH_RECOGNITION: boolean =
-  "SpeechRecognition" in window || "webkitSpeechRecognition" in window;
+  typeof window !== "undefined" &&
+  ("SpeechRecognition" in window || "webkitSpeechRecognition" in window);
 
 function SpeechToTextPlugin(): null {
+  if (!SUPPORT_SPEECH_RECOGNITION) {
+    return null;
+  }
+
   const [editor] = useLexicalComposerContext();
   const [isEnabled, setIsEnabled] = useState<boolean>(false);
   const SpeechRecognition =
@@ -88,7 +95,7 @@ function SpeechToTextPlugin(): null {
               }
             }
           });
-        }
+        },
       );
     }
 
@@ -113,13 +120,11 @@ function SpeechToTextPlugin(): null {
         setIsEnabled(_isEnabled);
         return true;
       },
-      COMMAND_PRIORITY_EDITOR
+      COMMAND_PRIORITY_EDITOR,
     );
   }, [editor]);
 
   return null;
 }
 
-export default (SUPPORT_SPEECH_RECOGNITION
-  ? SpeechToTextPlugin
-  : () => null) as () => null;
+export default SpeechToTextPlugin;

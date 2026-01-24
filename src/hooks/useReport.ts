@@ -1,3 +1,5 @@
+"use client";
+
 /**
  * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
@@ -32,7 +34,7 @@ const getElement = (): HTMLElement => {
 };
 
 export default function useReport(): (
-  arg0: string
+  arg0: string,
 ) => ReturnType<typeof setTimeout> {
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const cleanup = useCallback(() => {
@@ -61,6 +63,6 @@ export default function useReport(): (
       timer.current = setTimeout(cleanup, 1000);
       return timer.current;
     },
-    [cleanup]
+    [cleanup],
   );
 }

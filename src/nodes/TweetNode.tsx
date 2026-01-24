@@ -1,3 +1,5 @@
+"use client";
+
 /**
  * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
@@ -42,7 +44,7 @@ type TweetComponentProps = Readonly<{
 }>;
 
 function $convertTweetElement(
-  domNode: HTMLDivElement
+  domNode: HTMLDivElement,
 ): DOMConversionOutput | null {
   const id = domNode.getAttribute("data-lexical-tweet-id");
   if (id) {
@@ -186,7 +188,7 @@ export class TweetNode extends DecoratorBlockNode {
 
   getTextContent(
     _includeInert?: boolean | undefined,
-    _includeDirectionless?: false | undefined
+    _includeDirectionless?: false | undefined,
   ): string {
     return `https://x.com/i/web/status/${this.__id}`;
   }
@@ -214,7 +216,7 @@ export function $createTweetNode(tweetID: string): TweetNode {
 }
 
 export function $isTweetNode(
-  node: TweetNode | LexicalNode | null | undefined
+  node: TweetNode | LexicalNode | null | undefined,
 ): node is TweetNode {
   return node instanceof TweetNode;
 }

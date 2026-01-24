@@ -1,3 +1,5 @@
+"use client";
+
 /**
  * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
@@ -106,6 +108,6 @@ export default function Modal({
     >
       {children}
     </PortalImpl>,
-    document.body
+    document.body,
   );
 }

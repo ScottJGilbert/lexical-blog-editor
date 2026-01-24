@@ -1,3 +1,5 @@
+"use client";
+
 /**
  * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
@@ -15,7 +17,6 @@ import {
   exportFile,
   importFile,
   SerializedDocument,
-  serializedDocumentFromEditorState,
 } from "@lexical/file";
 import {
   $convertFromMarkdownString,
@@ -23,21 +24,18 @@ import {
 } from "@lexical/markdown";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import { mergeRegister } from "@lexical/utils";
-import { CONNECTED_COMMAND, TOGGLE_CONNECT_COMMAND } from "@lexical/yjs";
+import { CONNECTED_COMMAND } from "@lexical/yjs";
 import {
   $createTextNode,
   $getRoot,
   $isParagraphNode,
   CLEAR_EDITOR_COMMAND,
   CLEAR_HISTORY_COMMAND,
-  COLLABORATION_TAG,
   COMMAND_PRIORITY_EDITOR,
-  HISTORIC_TAG,
 } from "lexical";
 import { useCallback, useEffect, useState } from "react";
 
 import { INITIAL_SETTINGS } from "../../appSettings";
-import useFlashMessage from "../../hooks/useFlashMessage";
 import useModal from "../../hooks/useModal";
 import Button from "../../ui/Button";
 import { docFromHash, docToHash } from "../../utils/docSerialization";
@@ -46,7 +44,6 @@ import {
   SPEECH_TO_TEXT_COMMAND,
   SUPPORT_SPEECH_RECOGNITION,
 } from "../SpeechToTextPlugin";
-import { SHOW_VERSIONS_COMMAND } from "../VersionsPlugin";
 
 async function sendEditorState(editor: LexicalEditor): Promise<void> {
   const stringifiedEditorState = JSON.stringify(editor.getEditorState());
@@ -108,8 +105,8 @@ export default function ActionsPlugin({
           setConnected(isConnected);
           return false;
         },
-        COMMAND_PRIORITY_EDITOR
-      )
+        COMMAND_PRIORITY_EDITOR,
+      ),
     );
   }, [editor]);
 
@@ -131,7 +128,7 @@ export default function ActionsPlugin({
             }
           }
         });
-      }
+      },
     );
   }, [editor, isEditable]);
 
@@ -144,13 +141,13 @@ export default function ActionsPlugin({
           firstChild.getTextContent(),
           PLAYGROUND_TRANSFORMERS,
           undefined, // node
-          shouldPreserveNewLinesInMarkdown
+          shouldPreserveNewLinesInMarkdown,
         );
       } else {
         const markdown = $convertToMarkdownString(
           PLAYGROUND_TRANSFORMERS,
           undefined, //node
-          shouldPreserveNewLinesInMarkdown
+          shouldPreserveNewLinesInMarkdown,
         );
         const codeNode = $createCodeNode("markdown");
         codeNode.append($createTextNode(markdown));

@@ -1,3 +1,5 @@
+"use client";
+
 /**
  * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
@@ -6,17 +8,21 @@
  *
  */
 
-import type {JSX} from 'react';
+import type { JSX } from "react";
 
-import {useLexicalComposerContext} from '@lexical/react/LexicalComposerContext';
-import {$insertNodeToNearestRoot} from '@lexical/utils';
-import {COMMAND_PRIORITY_EDITOR, createCommand, LexicalCommand} from 'lexical';
-import {useEffect} from 'react';
+import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
+import { $insertNodeToNearestRoot } from "@lexical/utils";
+import {
+  COMMAND_PRIORITY_EDITOR,
+  createCommand,
+  LexicalCommand,
+} from "lexical";
+import { useEffect } from "react";
 
-import {$createFigmaNode, FigmaNode} from '../../nodes/FigmaNode';
+import { $createFigmaNode, FigmaNode } from "../../nodes/FigmaNode";
 
 export const INSERT_FIGMA_COMMAND: LexicalCommand<string> = createCommand(
-  'INSERT_FIGMA_COMMAND',
+  "INSERT_FIGMA_COMMAND",
 );
 
 export default function FigmaPlugin(): JSX.Element | null {
@@ -24,7 +30,7 @@ export default function FigmaPlugin(): JSX.Element | null {
 
   useEffect(() => {
     if (!editor.hasNodes([FigmaNode])) {
-      throw new Error('FigmaPlugin: FigmaNode not registered on editor');
+      throw new Error("FigmaPlugin: FigmaNode not registered on editor");
     }
 
     return editor.registerCommand<string>(

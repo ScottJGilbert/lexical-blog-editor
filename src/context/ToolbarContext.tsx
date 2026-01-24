@@ -1,3 +1,5 @@
+"use client";
+
 /**
  * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
@@ -87,7 +89,7 @@ type ContextShape = {
   toolbarState: ToolbarState;
   updateToolbarState<Key extends ToolbarStateKey>(
     key: Key,
-    value: ToolbarStateValue<Key>
+    value: ToolbarStateValue<Key>,
   ): void;
 };
 
@@ -108,7 +110,7 @@ export const ToolbarContext = ({
         [key]: value,
       }));
     },
-    []
+    [],
   );
 
   useEffect(() => {

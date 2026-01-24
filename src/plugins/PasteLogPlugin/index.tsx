@@ -1,3 +1,5 @@
+"use client";
+
 /**
  * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
@@ -16,7 +18,7 @@ export default function PasteLogPlugin(): JSX.Element {
   const [editor] = useLexicalComposerContext();
   const [isActive, setIsActive] = useState(false);
   const [lastClipboardData, setLastClipboardData] = useState<string | null>(
-    null
+    null,
   );
   useEffect(() => {
     if (isActive) {
@@ -33,7 +35,7 @@ export default function PasteLogPlugin(): JSX.Element {
           setLastClipboardData(allData.join("\n\n"));
           return false;
         },
-        COMMAND_PRIORITY_NORMAL
+        COMMAND_PRIORITY_NORMAL,
       );
     }
   }, [editor, isActive]);
