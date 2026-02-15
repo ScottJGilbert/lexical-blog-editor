@@ -149,7 +149,6 @@ import { Viewer } from "@scottjgilbert/lexical-blog-editor/viewer";
 ### Interactive Elements
 
 - **Links**: Auto-detection, manual insertion, and inline editing
-- **Mentions**: @mention support with autocomplete
 - **Hashtags**: Automatic #hashtag detection
 - **Keywords**: Special keyword highlighting
 - **Emojis**: Emoji picker with search and categories
@@ -162,7 +161,7 @@ import { Viewer } from "@scottjgilbert/lexical-blog-editor/viewer";
 - **Component Picker**: Slash commands (`/`) to quickly insert components
 - **Floating Toolbars**: Context-aware formatting toolbars
 - **Auto-linking**: Automatically converts URLs to clickable links
-- **Syntax Highlighting**: Code blocks with Shiki-powered syntax highlighting
+- **Syntax Highlighting**: Code blocks with Shiki-powered syntax highlighting for almost 200 languages
 - **Undo/Redo**: Full history support with keyboard shortcuts
 - **Keyboard Shortcuts**: Comprehensive keyboard shortcut system
 - **Copy/Paste**: Smart paste handling with format preservation
@@ -171,7 +170,7 @@ import { Viewer } from "@scottjgilbert/lexical-blog-editor/viewer";
 ### Included Plugins/Extensions
 
 <details>
-<summary>View all (40+)</summary>
+<summary>View all (30+)</summary>
 
 - ActionsPlugin
 - AutoEmbedPlugin
@@ -201,7 +200,6 @@ import { Viewer } from "@scottjgilbert/lexical-blog-editor/viewer";
 - LinkPlugin
 - ListPlugin
 - MarkdownShortcutPlugin
-- MentionsPlugin
 - RichTextPlugin
 - ShortcutsPlugin
 - SpeechToTextPlugin
@@ -217,7 +215,7 @@ import { Viewer } from "@scottjgilbert/lexical-blog-editor/viewer";
 ### Custom Nodes
 
 <details>
-<summary>The editor includes over 25 custom node types:</summary>
+<summary>The editor includes 20 custom node types:</summary>
 
 - AutoLinkNode, LinkNode
 - CodeNode, CodeHighlightNode
@@ -234,7 +232,6 @@ import { Viewer } from "@scottjgilbert/lexical-blog-editor/viewer";
 - LayoutContainerNode, LayoutItemNode
 - ListNode, ListItemNode
 - MarkNode
-- MentionNode
 - OverflowNode
 - SpecialTextNode
 - TableNode, TableCellNode, TableRowNode
