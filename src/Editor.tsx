@@ -58,11 +58,10 @@ import {
   $getRoot,
   $createParagraphNode,
   defineExtension,
-  EditorState,
   $createTextNode,
 } from "lexical";
 
-import { $generateHtmlFromNodes } from "@lexical/html";
+import { EditorState } from "./index";
 
 import { LexicalExtensionComposer } from "@lexical/react/LexicalExtensionComposer";
 import { TableContext } from "./plugins/TablePlugin";
@@ -80,17 +79,17 @@ import { HorizontalRuleExtension } from "@lexical/extension";
 function $prepopulatedRichText(): void {
   const root = $getRoot();
   const heading = $createHeadingNode("h1");
-  heading.append($createTextNode("Lexical Rich Text Editor"));
+  heading.append($createTextNode("Rich Blog Editor"));
   root.append(heading);
   const paragraph = $createParagraphNode();
-  paragraph.append($createTextNode("Welcome to the rich text editor!"));
+  paragraph.append($createTextNode("Welcome to the rich blog editor!"));
   root.append(paragraph);
 }
 
 export interface EditorProps {
   placeholder?: string;
   initialState?: EditorState;
-  onChange: (state: EditorState, html: string) => void;
+  onChange: (state: EditorState) => void;
 }
 
 export const EditorComponent = ({
@@ -98,7 +97,7 @@ export const EditorComponent = ({
   onChange,
 }: {
   placeholder?: string;
-  onChange: (state: EditorState, html: string) => void;
+  onChange: (state: EditorState) => void;
 }) => {
   const isEditable = useLexicalEditable();
 
@@ -119,7 +118,7 @@ export const EditorComponent = ({
   function OnChangePlugin({
     onChange,
   }: {
-    onChange: (state: EditorState, html: string) => void;
+    onChange: (state: EditorState) => void;
   }) {
     const [editor] = useLexicalComposerContext();
     // Wrap our listener in useEffect to handle the teardown and avoid stale references.
@@ -127,13 +126,7 @@ export const EditorComponent = ({
       // most listeners return a teardown function that can be called to clean them up.
       return editor.registerUpdateListener(({ editorState }) => {
         editor.read(() => {
-          onChange(
-            editorState,
-            //Need to modify generateHtml to auto-inject classes for styling
-            '<div class="lexical-blog-output">' +
-              $generateHtmlFromNodes(editor) +
-              "</div>",
-          );
+          onChange(editorState);
         });
       });
     }, [editor, onChange]);
