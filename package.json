@@ -1,6 +1,6 @@
 {
   "name": "@scottjgilbert/lexical-blog-editor",
-  "version": "0.1.4",
+  "version": "1.0.0-beta.0",
   "description": "Prebuilt components for editing and rendering rich blog content with Lexical. Modified wrapper of the Lexical Playground editor.",
   "main": "./build/index.js",
   "types": "./build/index.d.ts",
@@ -13,7 +13,9 @@
       "types": "./build/index.d.ts",
       "import": "./build/index.js",
       "require": "./build/index.js"
-    }
+    },
+    "./styles/output.css": "./build/output.css",
+    "./styles/complete.css": "./build/complete.css"
   },
   "files": [
     "build"
@@ -31,12 +33,11 @@
     "rich-text"
   ],
   "author": "Scott Gilbert",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "@floating-ui/react": "^0.27.16",
     "@lexical/clipboard": "^0.39.0",
     "@lexical/code": "^0.39.0",
-    "@lexical/code-shiki": "^0.39.0",
     "@lexical/file": "^0.39.0",
     "@lexical/hashtag": "^0.39.0",
     "@lexical/html": "^0.39.0",
@@ -52,6 +53,7 @@
     "@lexical/utils": "^0.39.0",
     "@lexical/yjs": "^0.39.0",
     "date-fns": "^4.1.0",
+    "html-react-parser": "^5.2.11",
     "katex": "^0.16.27",
     "lexical": "^0.39.0",
     "lodash": "^4.17.21",

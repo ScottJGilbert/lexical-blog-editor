@@ -1,1 +1,0 @@
-{"version":3,"file":"index.d.ts","sourceRoot":"","sources":["../../../../../src/plugins/CodeActionMenuPlugin/components/CopyButton/index.tsx"],"names":[],"mappings":"AAQA,OAAO,EAIL,aAAa,EACd,MAAM,SAAS,CAAC;AAMjB,UAAU,KAAK;IACb,MAAM,EAAE,aAAa,CAAC;IACtB,cAAc,EAAE,MAAM,WAAW,GAAG,IAAI,CAAC;CAC1C;AAED,wBAAgB,UAAU,CAAC,EAAC,MAAM,EAAE,cAAc,EAAC,EAAE,KAAK,2CA6CzD"}

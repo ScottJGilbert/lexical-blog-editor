@@ -1,3 +1,5 @@
+"use client";
+
 /**
  * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
@@ -121,13 +123,13 @@ export default function ShortcutsPlugin({
         updateFontSize(
           editor,
           UpdateFontSizeType.increment,
-          toolbarState.fontSizeInputValue
+          toolbarState.fontSizeInputValue,
         );
       } else if (isDecreaseFontSize(event)) {
         updateFontSize(
           editor,
           UpdateFontSizeType.decrement,
-          toolbarState.fontSizeInputValue
+          toolbarState.fontSizeInputValue,
         );
       } else if (isClearFormatting(event)) {
         clearFormatting(editor);
@@ -146,7 +148,7 @@ export default function ShortcutsPlugin({
     return editor.registerCommand(
       KEY_DOWN_COMMAND,
       keyboardShortcutsHandler,
-      COMMAND_PRIORITY_NORMAL
+      COMMAND_PRIORITY_NORMAL,
     );
   }, [
     editor,

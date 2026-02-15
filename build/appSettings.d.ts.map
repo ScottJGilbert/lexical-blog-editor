@@ -1,1 +1,0 @@
-{"version":3,"file":"appSettings.d.ts","sourceRoot":"","sources":["../src/appSettings.ts"],"names":[],"mappings":"AAAA;;;;;;GAMG;AAEH,eAAO,MAAM,eAAe,EAAE,OAAe,CAAC;AAE9C,eAAO,MAAM,gBAAgB;;;;;;;;;;;;;;;;;;;;;;;;;;CA0BnB,CAAC;AAGX,eAAO,MAAM,gBAAgB,EAAE,MAAM,CAAC,WAAW,EAAE,OAAO,CAEzD,CAAC;AAEF,MAAM,MAAM,WAAW,GAAG,MAAM,OAAO,gBAAgB,CAAC;AAExD,MAAM,MAAM,QAAQ,GAAG,OAAO,gBAAgB,CAAC"}

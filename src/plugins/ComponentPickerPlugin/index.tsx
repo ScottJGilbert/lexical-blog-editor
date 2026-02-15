@@ -1,3 +1,5 @@
+"use client";
+
 /**
  * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
@@ -65,7 +67,7 @@ export class ComponentPickerOption extends MenuOption {
       keywords?: Array<string>;
       keyboardShortcut?: string;
       onSelect: (queryString: string) => void;
-    }
+    },
   ) {
     super(title);
     this.title = title;
@@ -134,8 +136,8 @@ export function getDynamicOptions(editor: LexicalEditor, queryString: string) {
             keywords: ["table"],
             onSelect: () =>
               editor.dispatchCommand(INSERT_TABLE_COMMAND, { columns, rows }),
-          })
-      )
+          }),
+      ),
     );
   }
 
@@ -169,7 +171,7 @@ export function getBaseOptions(editor: LexicalEditor, showModal: ShowModal) {
                 $setBlocksType(selection, () => $createHeadingNode(`h${n}`));
               }
             }),
-        })
+        }),
     ),
     new ComponentPickerOption("Table", {
       icon: <i className="icon table" />,
@@ -246,7 +248,7 @@ export function getBaseOptions(editor: LexicalEditor, showModal: ShowModal) {
           keywords: [...embedConfig.keywords, "embed"],
           onSelect: () =>
             editor.dispatchCommand(INSERT_EMBED_COMMAND, embedConfig.type),
-        })
+        }),
     ),
     new ComponentPickerOption("Date", {
       icon: <i className="icon calendar" />,
@@ -323,7 +325,7 @@ export function getBaseOptions(editor: LexicalEditor, showModal: ShowModal) {
           keywords: ["align", "justify", alignment],
           onSelect: () =>
             editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, alignment),
-        })
+        }),
     ),
   ];
 }
@@ -352,7 +354,7 @@ export default function ComponentPickerMenuPlugin(): JSX.Element {
       ...baseOptions.filter(
         (option) =>
           regex.test(option.title) ||
-          option.keywords.some((keyword) => regex.test(keyword))
+          option.keywords.some((keyword) => regex.test(keyword)),
       ),
     ];
   }, [editor, queryString, showModal]);
@@ -362,7 +364,7 @@ export default function ComponentPickerMenuPlugin(): JSX.Element {
       selectedOption: ComponentPickerOption,
       nodeToRemove: TextNode | null,
       closeMenu: () => void,
-      matchingString: string
+      matchingString: string,
     ) => {
       editor.update(() => {
         nodeToRemove?.remove();
@@ -370,7 +372,7 @@ export default function ComponentPickerMenuPlugin(): JSX.Element {
         closeMenu();
       });
     },
-    [editor]
+    [editor],
   );
 
   return (
@@ -383,7 +385,7 @@ export default function ComponentPickerMenuPlugin(): JSX.Element {
         options={options}
         menuRenderFn={(
           anchorElementRef,
-          { selectedIndex, selectOptionAndCleanUp, setHighlightedIndex }
+          { selectedIndex, selectOptionAndCleanUp, setHighlightedIndex },
         ) =>
           anchorElementRef.current && options.length
             ? ReactDOM.createPortal(
@@ -406,7 +408,7 @@ export default function ComponentPickerMenuPlugin(): JSX.Element {
                     ))}
                   </ul>
                 </div>,
-                anchorElementRef.current
+                anchorElementRef.current,
               )
             : null
         }

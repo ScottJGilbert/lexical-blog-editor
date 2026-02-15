@@ -1,3 +1,5 @@
+"use client";
+
 /**
  * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
@@ -6,11 +8,11 @@
  *
  */
 
-import type {JSX} from 'react';
+import type { JSX } from "react";
 
-import {registerCodeHighlighting} from '@lexical/code';
-import {useLexicalComposerContext} from '@lexical/react/LexicalComposerContext';
-import {useEffect} from 'react';
+import { registerCodeHighlighting } from "@lexical/code";
+import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
+import { useEffect } from "react";
 
 export default function CodeHighlightPrismPlugin(): JSX.Element | null {
   const [editor] = useLexicalComposerContext();

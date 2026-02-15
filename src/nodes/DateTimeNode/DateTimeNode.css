@@ -32,3 +32,24 @@
   --rdp-accent-color: #76b6ff;
   --rdp-accent-background-color: #f0f0f0;
 }
+
+@media (prefers-color-scheme: dark) {
+  .dateTimePill {
+    background: #3a3a3a;
+    border: 1px solid #3a3a3a;
+    color: #ddd;
+  }
+  .dateTimePill:hover {
+    background: #4a4a4a;
+  }
+  .dateTimePicker {
+    background: #2a2a2a;
+    border: 1px solid #444;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.7);
+    color: #ddd;
+  }
+  .rdp-root {
+    --rdp-accent-color: #1768ff;
+    --rdp-accent-background-color: #333;
+  }
+}

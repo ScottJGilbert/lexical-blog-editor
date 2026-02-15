@@ -31,7 +31,6 @@ import { LayoutContainerNode } from "./LayoutContainerNode";
 import { LayoutItemNode } from "./LayoutItemNode";
 import { MentionNode } from "./MentionNode";
 import { PageBreakNode } from "./PageBreakNode";
-import { PollNode } from "./PollNode";
 import { SpecialTextNode } from "./SpecialTextNode";
 import { TweetNode } from "./TweetNode";
 import { YouTubeNode } from "./YouTubeNode";
@@ -50,7 +49,6 @@ const PlaygroundNodes: Array<Klass<LexicalNode>> = [
   AutoLinkNode,
   LinkNode,
   OverflowNode,
-  PollNode,
   ImageNode,
   MentionNode,
   EmojiNode,

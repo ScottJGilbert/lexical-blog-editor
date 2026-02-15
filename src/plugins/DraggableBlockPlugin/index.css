@@ -61,3 +61,9 @@
   font-size: 14px;
   border-radius: 8px 8px 0 0;
 }
+
+@media (prefers-color-scheme: dark) {
+  .draggable-block-menu .icon {
+    filter: invert(1);
+  }
+}

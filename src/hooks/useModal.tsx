@@ -1,3 +1,5 @@
+"use client";
+
 /**
  * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
@@ -46,7 +48,7 @@ export default function useModal(): [
     (
       title: string,
       getContent: (onClose: () => void) => JSX.Element,
-      closeOnClickOutside = false
+      closeOnClickOutside = false,
     ) => {
       setModalContent({
         closeOnClickOutside,
@@ -54,7 +56,7 @@ export default function useModal(): [
         title,
       });
     },
-    [onClose]
+    [onClose],
   );
 
   return [modal, showModal];

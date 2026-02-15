@@ -1,3 +1,4 @@
+"use client";
 /**
  * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
@@ -91,7 +92,7 @@ function DropDownItems({
     (itemRef: React.RefObject<null | HTMLButtonElement>) => {
       setItems((prev) => (prev ? [...prev, itemRef] : [itemRef]));
     },
-    [setItems]
+    [setItems],
   );
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
@@ -131,7 +132,7 @@ function DropDownItems({
     () => ({
       registerItem,
     }),
-    [registerItem]
+    [registerItem],
   );
 
   useEffect(() => {
@@ -288,7 +289,7 @@ export default function DropDown({
           >
             {children}
           </DropDownItems>,
-          document.body
+          document.body,
         )}
     </>
   );

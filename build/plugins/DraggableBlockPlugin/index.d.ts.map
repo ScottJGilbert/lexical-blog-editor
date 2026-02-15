@@ -1,1 +1,0 @@
-{"version":3,"file":"index.d.ts","sourceRoot":"","sources":["../../../src/plugins/DraggableBlockPlugin/index.tsx"],"names":[],"mappings":"AAQA,OAAO,KAAK,EAAC,GAAG,EAAC,MAAM,OAAO,CAAC;AAE/B,OAAO,aAAa,CAAC;AAkCrB,MAAM,CAAC,OAAO,UAAU,oBAAoB,CAAC,EAC3C,UAA0B,GAC3B,EAAE;IACD,UAAU,CAAC,EAAE,WAAW,CAAC;CAC1B,GAAG,GAAG,CAAC,OAAO,CAkPd"}

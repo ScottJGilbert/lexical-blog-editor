@@ -1,3 +1,5 @@
+"use client";
+
 /**
  * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
@@ -13,11 +15,6 @@ import {
   getCodeLanguageOptions as getCodeLanguageOptionsPrism,
   normalizeCodeLanguage as normalizeCodeLanguagePrism,
 } from "@lexical/code";
-import {
-  getCodeLanguageOptions as getCodeLanguageOptionsShiki,
-  getCodeThemeOptions as getCodeThemeOptionsShiki,
-  normalizeCodeLanguage as normalizeCodeLanguageShiki,
-} from "@lexical/code-shiki";
 import { $isLinkNode, TOGGLE_LINK_COMMAND } from "@lexical/link";
 import { $isListNode, ListNode } from "@lexical/list";
 import { INSERT_EMBED_COMMAND } from "@lexical/react/LexicalAutoEmbedPlugin";
@@ -39,7 +36,6 @@ import {
 import {
   $addUpdateTag,
   $getNodeByKey,
-  $getRoot,
   $getSelection,
   $isElementNode,
   $isNodeSelection,
@@ -82,11 +78,7 @@ import { EmbedConfigs } from "../AutoEmbedPlugin";
 import { INSERT_COLLAPSIBLE_COMMAND } from "../CollapsiblePlugin";
 import { INSERT_DATETIME_COMMAND } from "../DateTimePlugin";
 import { InsertEquationDialog } from "../EquationsPlugin";
-import {
-  INSERT_IMAGE_COMMAND,
-  InsertImageDialog,
-  InsertImagePayload,
-} from "../ImagesPlugin";
+import { InsertImageDialog } from "../ImagesPlugin";
 import InsertLayoutDialog from "../LayoutPlugin/InsertLayoutDialog";
 import { INSERT_PAGE_BREAK } from "../PageBreakPlugin";
 import { SHORTCUTS } from "../ShortcutsPlugin/shortcuts";
@@ -132,53 +124,7 @@ const CODE_LANGUAGE_OPTIONS_PRISM: [string, string][] =
       "swift",
       "typescript",
       "xml",
-    ].includes(option[0])
-  );
-
-const CODE_LANGUAGE_OPTIONS_SHIKI: [string, string][] =
-  getCodeLanguageOptionsShiki().filter((option) =>
-    [
-      "c",
-      "clike",
-      "cpp",
-      "css",
-      "html",
-      "java",
-      "js",
-      "javascript",
-      "markdown",
-      "objc",
-      "objective-c",
-      "plain",
-      "powershell",
-      "py",
-      "python",
-      "rust",
-      "sql",
-      "typescript",
-      "xml",
-    ].includes(option[0])
-  );
-
-const CODE_THEME_OPTIONS_SHIKI: [string, string][] =
-  getCodeThemeOptionsShiki().filter((option) =>
-    [
-      "catppuccin-latte",
-      "everforest-light",
-      "github-light",
-      "gruvbox-light-medium",
-      "kanagawa-lotus",
-      "dark-plus",
-      "light-plus",
-      "material-theme-lighter",
-      "min-light",
-      "one-light",
-      "rose-pine-dawn",
-      "slack-ochin",
-      "snazzy-light",
-      "solarized-light",
-      "vitesse-light",
-    ].includes(option[0])
+    ].includes(option[0]),
   );
 
 const FONT_FAMILY_OPTIONS: [string, string][] = [
@@ -393,7 +339,7 @@ function FontDropDown({
         }
       });
     },
-    [editor, style]
+    [editor, style],
   );
 
   const buttonAriaLabel =
@@ -422,7 +368,7 @@ function FontDropDown({
           >
             <span className="text">{text}</span>
           </DropDownItem>
-        )
+        ),
       )}
     </DropDown>
   );
@@ -585,7 +531,7 @@ export default function ToolbarPlugin({
   setIsLinkEditMode: Dispatch<boolean>;
 }): JSX.Element {
   const [selectedElementKey, setSelectedElementKey] = useState<NodeKey | null>(
-    null
+    null,
   );
   const [modal, showModal] = useModal();
   const [isEditable, setIsEditable] = useState(() => editor.isEditable());
@@ -594,7 +540,7 @@ export default function ToolbarPlugin({
   const dispatchToolbarCommand = <T extends LexicalCommand<unknown>>(
     command: T,
     payload: CommandPayloadType<T> | undefined = undefined,
-    skipRefocus: boolean = false
+    skipRefocus: boolean = false,
   ) => {
     activeEditor.update(() => {
       if (skipRefocus) {
@@ -608,7 +554,7 @@ export default function ToolbarPlugin({
 
   const dispatchFormatTextCommand = (
     payload: TextFormatType,
-    skipRefocus: boolean = false
+    skipRefocus: boolean = false,
   ) => dispatchToolbarCommand(FORMAT_TEXT_COMMAND, payload, skipRefocus);
 
   const $handleHeadingNode = useCallback(
@@ -620,27 +566,24 @@ export default function ToolbarPlugin({
       if (type in blockTypeToBlockName) {
         updateToolbarState(
           "blockType",
-          type as keyof typeof blockTypeToBlockName
+          type as keyof typeof blockTypeToBlockName,
         );
       }
     },
-    [updateToolbarState]
+    [updateToolbarState],
   );
 
   const $handleCodeNode = useCallback(
     (element: LexicalNode) => {
       if ($isCodeNode(element)) {
         const language = element.getLanguage();
-        updateToolbarState(
-          "codeLanguage",
-          language ? normalizeCodeLanguageShiki(language) || language : ""
-        );
+        updateToolbarState("codeLanguage", language ? language : "");
         const theme = element.getTheme();
         updateToolbarState("codeTheme", theme || "");
         return;
       }
     },
-    [updateToolbarState]
+    [updateToolbarState],
   );
 
   const $updateToolbar = useCallback(() => {
@@ -651,8 +594,8 @@ export default function ToolbarPlugin({
         updateToolbarState(
           "isImageCaption",
           !!rootElement?.parentElement?.classList.contains(
-            "image-caption-container"
-          )
+            "image-caption-container",
+          ),
         );
       } else {
         updateToolbarState("isImageCaption", false);
@@ -683,7 +626,7 @@ export default function ToolbarPlugin({
         if ($isListNode(element)) {
           const parentList = $getNearestNodeOfType<ListNode>(
             anchorNode,
-            ListNode
+            ListNode,
           );
           const type = parentList
             ? parentList.getListType()
@@ -699,26 +642,26 @@ export default function ToolbarPlugin({
       // Handle buttons
       updateToolbarState(
         "fontColor",
-        $getSelectionStyleValueForProperty(selection, "color", "#000")
+        $getSelectionStyleValueForProperty(selection, "color", "#000"),
       );
       updateToolbarState(
         "bgColor",
         $getSelectionStyleValueForProperty(
           selection,
           "background-color",
-          "#fff"
-        )
+          "#fff",
+        ),
       );
       updateToolbarState(
         "fontFamily",
-        $getSelectionStyleValueForProperty(selection, "font-family", "Arial")
+        $getSelectionStyleValueForProperty(selection, "font-family", "Arial"),
       );
       let matchingParent;
       if ($isLinkNode(parent)) {
         // If node is a link, we need to fetch the parent paragraph node to set format
         matchingParent = $findMatchingParent(
           node,
-          (parentNode) => $isElementNode(parentNode) && !parentNode.isInline()
+          (parentNode) => $isElementNode(parentNode) && !parentNode.isInline(),
         );
       }
 
@@ -729,7 +672,7 @@ export default function ToolbarPlugin({
           ? matchingParent.getFormatType()
           : $isElementNode(node)
             ? node.getFormatType()
-            : parent?.getFormatType() || "left"
+            : parent?.getFormatType() || "left",
       );
     }
     if ($isRangeSelection(selection) || $isTableSelection(selection)) {
@@ -739,7 +682,7 @@ export default function ToolbarPlugin({
       updateToolbarState("isUnderline", selection.hasFormat("underline"));
       updateToolbarState(
         "isStrikethrough",
-        selection.hasFormat("strikethrough")
+        selection.hasFormat("strikethrough"),
       );
       updateToolbarState("isSubscript", selection.hasFormat("subscript"));
       updateToolbarState("isSuperscript", selection.hasFormat("superscript"));
@@ -747,7 +690,7 @@ export default function ToolbarPlugin({
       updateToolbarState("isCode", selection.hasFormat("code"));
       updateToolbarState(
         "fontSize",
-        $getSelectionStyleValueForProperty(selection, "font-size", "15px")
+        $getSelectionStyleValueForProperty(selection, "font-size", "15px"),
       );
       updateToolbarState("isLowercase", selection.hasFormat("lowercase"));
       updateToolbarState("isUppercase", selection.hasFormat("uppercase"));
@@ -758,7 +701,7 @@ export default function ToolbarPlugin({
       for (const selectedNode of nodes) {
         const parentList = $getNearestNodeOfType<ListNode>(
           selectedNode,
-          ListNode
+          ListNode,
         );
         if (parentList) {
           const type = parentList.getListType();
@@ -771,7 +714,7 @@ export default function ToolbarPlugin({
           if ($isElementNode(selectedElement)) {
             updateToolbarState(
               "elementFormat",
-              selectedElement.getFormatType()
+              selectedElement.getFormatType(),
             );
           }
         }
@@ -793,7 +736,7 @@ export default function ToolbarPlugin({
         $updateToolbar();
         return false;
       },
-      COMMAND_PRIORITY_CRITICAL
+      COMMAND_PRIORITY_CRITICAL,
     );
   }, [editor, $updateToolbar, setActiveEditor]);
 
@@ -802,7 +745,7 @@ export default function ToolbarPlugin({
       () => {
         $updateToolbar();
       },
-      { editor: activeEditor }
+      { editor: activeEditor },
     );
   }, [activeEditor, $updateToolbar]);
 
@@ -816,7 +759,7 @@ export default function ToolbarPlugin({
           () => {
             $updateToolbar();
           },
-          { editor: activeEditor }
+          { editor: activeEditor },
         );
       }),
       activeEditor.registerCommand<boolean>(
@@ -825,7 +768,7 @@ export default function ToolbarPlugin({
           updateToolbarState("canUndo", payload);
           return false;
         },
-        COMMAND_PRIORITY_CRITICAL
+        COMMAND_PRIORITY_CRITICAL,
       ),
       activeEditor.registerCommand<boolean>(
         CAN_REDO_COMMAND,
@@ -833,8 +776,8 @@ export default function ToolbarPlugin({
           updateToolbarState("canRedo", payload);
           return false;
         },
-        COMMAND_PRIORITY_CRITICAL
-      )
+        COMMAND_PRIORITY_CRITICAL,
+      ),
     );
   }, [$updateToolbar, activeEditor, editor, updateToolbarState]);
 
@@ -842,7 +785,7 @@ export default function ToolbarPlugin({
     (
       styles: Record<string, string>,
       skipHistoryStack?: boolean,
-      skipRefocus: boolean = false
+      skipRefocus: boolean = false,
     ) => {
       activeEditor.update(
         () => {
@@ -854,17 +797,17 @@ export default function ToolbarPlugin({
             $patchStyleText(selection, styles);
           }
         },
-        skipHistoryStack ? { tag: HISTORIC_TAG } : {}
+        skipHistoryStack ? { tag: HISTORIC_TAG } : {},
       );
     },
-    [activeEditor]
+    [activeEditor],
   );
 
   const onFontColorSelect = useCallback(
     (value: string, skipHistoryStack: boolean, skipRefocus: boolean) => {
       applyStyleText({ color: value }, skipHistoryStack, skipRefocus);
     },
-    [applyStyleText]
+    [applyStyleText],
   );
 
   const onBgColorSelect = useCallback(
@@ -872,10 +815,10 @@ export default function ToolbarPlugin({
       applyStyleText(
         { "background-color": value },
         skipHistoryStack,
-        skipRefocus
+        skipRefocus,
       );
     },
-    [applyStyleText]
+    [applyStyleText],
   );
 
   const insertLink = useCallback(() => {
@@ -883,7 +826,7 @@ export default function ToolbarPlugin({
       setIsLinkEditMode(true);
       activeEditor.dispatchCommand(
         TOGGLE_LINK_COMMAND,
-        sanitizeUrl("https://")
+        sanitizeUrl("https://"),
       );
     } else {
       setIsLinkEditMode(false);
@@ -903,7 +846,7 @@ export default function ToolbarPlugin({
         }
       });
     },
-    [activeEditor, selectedElementKey]
+    [activeEditor, selectedElementKey],
   );
   const onCodeThemeSelect = useCallback(
     (value: string) => {
@@ -916,7 +859,7 @@ export default function ToolbarPlugin({
         }
       });
     },
-    [activeEditor, selectedElementKey]
+    [activeEditor, selectedElementKey],
   );
 
   const canViewerSeeInsertDropdown = !toolbarState.isImageCaption;
@@ -970,7 +913,7 @@ export default function ToolbarPlugin({
               (CODE_LANGUAGE_OPTIONS_PRISM.find(
                 (opt) =>
                   opt[0] ===
-                  normalizeCodeLanguagePrism(toolbarState.codeLanguage)
+                  normalizeCodeLanguagePrism(toolbarState.codeLanguage),
               ) || ["", ""])[1]
             }
             buttonAriaLabel="Select language"
@@ -979,7 +922,7 @@ export default function ToolbarPlugin({
               return (
                 <DropDownItem
                   className={`item ${dropDownActiveClass(
-                    value === toolbarState.codeLanguage
+                    value === toolbarState.codeLanguage,
                   )}`}
                   onClick={() => onCodeLanguageSelect(value)}
                   key={value}
@@ -989,59 +932,6 @@ export default function ToolbarPlugin({
               );
             })}
           </DropDown>
-
-          <>
-            <DropDown
-              disabled={!isEditable}
-              buttonClassName="toolbar-item code-language"
-              buttonLabel={
-                (CODE_LANGUAGE_OPTIONS_SHIKI.find(
-                  (opt) =>
-                    opt[0] ===
-                    normalizeCodeLanguageShiki(toolbarState.codeLanguage)
-                ) || ["", ""])[1]
-              }
-              buttonAriaLabel="Select language"
-            >
-              {CODE_LANGUAGE_OPTIONS_SHIKI.map(([value, name]) => {
-                return (
-                  <DropDownItem
-                    className={`item ${dropDownActiveClass(
-                      value === toolbarState.codeLanguage
-                    )}`}
-                    onClick={() => onCodeLanguageSelect(value)}
-                    key={value}
-                  >
-                    <span className="text">{name}</span>
-                  </DropDownItem>
-                );
-              })}
-            </DropDown>
-            <DropDown
-              disabled={!isEditable}
-              buttonClassName="toolbar-item code-language"
-              buttonLabel={
-                (CODE_THEME_OPTIONS_SHIKI.find(
-                  (opt) => opt[0] === toolbarState.codeTheme
-                ) || ["", ""])[1]
-              }
-              buttonAriaLabel="Select theme"
-            >
-              {CODE_THEME_OPTIONS_SHIKI.map(([value, name]) => {
-                return (
-                  <DropDownItem
-                    className={`item ${dropDownActiveClass(
-                      value === toolbarState.codeTheme
-                    )}`}
-                    onClick={() => onCodeThemeSelect(value)}
-                    key={value}
-                  >
-                    <span className="text">{name}</span>
-                  </DropDownItem>
-                );
-              })}
-            </DropDown>
-          </>
         </>
       ) : (
         <>
@@ -1054,7 +944,7 @@ export default function ToolbarPlugin({
           <Divider />
           <FontSize
             selectionFontSize={parseFontSizeForToolbar(
-              toolbarState.fontSize
+              toolbarState.fontSize,
             ).slice(0, -2)}
             editor={activeEditor}
             disabled={!isEditable}
@@ -1390,7 +1280,7 @@ export default function ToolbarPlugin({
                     onClick={() =>
                       dispatchToolbarCommand(
                         INSERT_EMBED_COMMAND,
-                        embedConfig.type
+                        embedConfig.type,
                       )
                     }
                     className="item"

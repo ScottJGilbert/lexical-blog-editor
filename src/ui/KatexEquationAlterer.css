@@ -27,7 +27,7 @@
 
 .KatexEquationAlterer_centerRow {
   display: flex;
-  flex-direction: 'row';
+  flex-direction: "row";
   margin-top: 10px;
   margin-bottom: 10px;
   justify-content: center;
@@ -38,4 +38,6 @@
   width: 100%;
   resize: none;
   padding: 7px;
+  border: 1px solid;
+  border-color: black;
 }

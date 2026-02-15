@@ -1,3 +1,5 @@
+"use client";
+
 /**
  * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
@@ -31,7 +33,7 @@ class EmojiOption extends MenuOption {
     emoji: string,
     options: {
       keywords?: Array<string>;
-    }
+    },
   ) {
     super(title);
     this.title = title;
@@ -104,10 +106,10 @@ export default function EmojiPickerPlugin() {
             ({ emoji, aliases, tags }) =>
               new EmojiOption(aliases[0], emoji, {
                 keywords: [...aliases, ...tags],
-              })
+              }),
           )
         : [],
-    [emojis]
+    [emojis],
   );
 
   const checkForTriggerMatch = useBasicTypeaheadTriggerMatch(":", {
@@ -122,7 +124,7 @@ export default function EmojiPickerPlugin() {
           ? new RegExp(queryString, "gi").exec(option.title) ||
             option.keywords != null
             ? option.keywords.some((keyword: string) =>
-                new RegExp(queryString, "gi").exec(keyword)
+                new RegExp(queryString, "gi").exec(keyword),
               )
             : false
           : emojiOptions;
@@ -134,7 +136,7 @@ export default function EmojiPickerPlugin() {
     (
       selectedOption: EmojiOption,
       nodeToRemove: TextNode | null,
-      closeMenu: () => void
+      closeMenu: () => void,
     ) => {
       editor.update(() => {
         const selection = $getSelection();
@@ -152,7 +154,7 @@ export default function EmojiPickerPlugin() {
         closeMenu();
       });
     },
-    [editor]
+    [editor],
   );
 
   return (
@@ -163,7 +165,7 @@ export default function EmojiPickerPlugin() {
       options={options}
       menuRenderFn={(
         anchorElementRef,
-        { selectedIndex, selectOptionAndCleanUp, setHighlightedIndex }
+        { selectedIndex, selectOptionAndCleanUp, setHighlightedIndex },
       ) => {
         if (anchorElementRef.current == null || options.length === 0) {
           return null;
@@ -190,7 +192,7 @@ export default function EmojiPickerPlugin() {
                   ))}
                 </ul>
               </div>,
-              anchorElementRef.current
+              anchorElementRef.current,
             )
           : null;
       }}

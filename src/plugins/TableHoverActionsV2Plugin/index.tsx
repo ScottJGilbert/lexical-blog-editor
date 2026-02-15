@@ -1,3 +1,5 @@
+"use client";
+
 /**
  * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
@@ -80,7 +82,7 @@ function $isSimpleTable(table: TableNode): boolean {
 
 function getTableFromMouseEvent(
   event: MouseEvent,
-  getTheme: () => EditorThemeClasses | null | undefined
+  getTheme: () => EditorThemeClasses | null | undefined,
 ): {
   isOutside: boolean;
   tableElement: HTMLTableElement | null;
@@ -101,7 +103,7 @@ function getTableFromMouseEvent(
 
 function getClosestTopCellPosition(
   tableElement: HTMLTableElement,
-  clientX: number
+  clientX: number,
 ): { centerX: number; top: number; cell: HTMLTableCellElement } | null {
   const firstRow = tableElement.rows[0];
   if (!firstRow) {
@@ -148,7 +150,7 @@ function TableHoverActionsV2({
   const hoveredLeftCellRef = useRef<HTMLTableCellElement | null>(null);
   const hoveredTopCellRef = useRef<HTMLTableCellElement | null>(null);
   const handleMouseLeaveRef = useRef<((event: MouseEvent) => void) | null>(
-    null
+    null,
   );
 
   const { refs, floatingStyles, update } = useFloating({
@@ -198,7 +200,7 @@ function TableHoverActionsV2({
 
       const { tableElement, isOutside } = getTableFromMouseEvent(
         event,
-        getTheme
+        getTheme,
       );
 
       if (
@@ -232,7 +234,7 @@ function TableHoverActionsV2({
 
       const closestTopCell = getClosestTopCellPosition(
         tableElement,
-        event.clientX
+        event.clientX,
       );
 
       if (!closestTopCell || rowIndex !== 0) {
@@ -260,7 +262,7 @@ function TableHoverActionsV2({
           new DOMRect(tableRect.left, centerY, 0, 0);
         leftRefs.setReference(leftVirtualRef.current as unknown as Element);
         leftRefs.setPositionReference(
-          leftVirtualRef.current as unknown as Element
+          leftVirtualRef.current as unknown as Element,
         );
         setIsLeftVisible(true);
         updateLeft?.();
@@ -302,7 +304,7 @@ function TableHoverActionsV2({
       if (prevRootElement && handleMouseLeaveRef.current) {
         prevRootElement.removeEventListener(
           "mouseleave",
-          handleMouseLeaveRef.current
+          handleMouseLeaveRef.current,
         );
       }
       if (rootElement && handleMouseLeaveRef.current) {
@@ -371,7 +373,7 @@ function TableHoverActionsV2({
       const [tableMap] = $computeTableMapSkipCellCheck(
         tableNode,
         cellNode,
-        cellNode
+        cellNode,
       );
 
       const headerCell = tableMap[0]?.[colIndex]?.cell;

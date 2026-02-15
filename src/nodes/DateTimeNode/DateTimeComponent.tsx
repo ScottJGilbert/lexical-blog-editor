@@ -1,3 +1,5 @@
+"use client";
+
 /**
  * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
@@ -115,7 +117,7 @@ export default function DateTimeComponent({
 
   const withDateTimeNode = (
     cb: (node: DateTimeNode) => void,
-    onUpdate?: () => void
+    onUpdate?: () => void,
   ): void => {
     editor.update(
       () => {
@@ -124,7 +126,7 @@ export default function DateTimeComponent({
           cb(node);
         }
       },
-      { onUpdate }
+      { onUpdate },
     );
   };
 
@@ -174,7 +176,7 @@ export default function DateTimeComponent({
         date.getMonth(),
         date.getDate(),
         hours,
-        minutes
+        minutes,
       );
       node.setDateTime(newDate);
       setSelected(newDate);
