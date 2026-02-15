@@ -15,7 +15,7 @@ import {
   ParagraphNode,
   TextNode,
 } from "lexical";
-import { CodeNode } from "@lexical/code";
+import { CodeNode } from "./nodes/CodeNode/CodeNode";
 
 import { parseAllowedFontSize } from "./plugins/ToolbarPlugin/fontSize";
 import { parseAllowedColor } from "./ui/ColorPicker";

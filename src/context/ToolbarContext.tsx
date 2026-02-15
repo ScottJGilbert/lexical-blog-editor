@@ -52,6 +52,7 @@ const INITIAL_TOOLBAR_STATE = {
   blockType: "paragraph" as keyof typeof blockTypeToBlockName,
   canRedo: false,
   canUndo: false,
+  codeCategory: "",
   codeLanguage: "",
   codeTheme: "",
   elementFormat: "left" as ElementFormatType,

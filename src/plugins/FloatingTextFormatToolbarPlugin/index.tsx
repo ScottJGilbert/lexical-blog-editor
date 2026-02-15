@@ -12,7 +12,7 @@ import type { JSX } from "react";
 
 import "./index.css";
 
-import { $isCodeHighlightNode } from "@lexical/code";
+import { $isCodeHighlightNode } from "../../nodes/CodeNode/CodeHighlightNode";
 import { $isLinkNode, TOGGLE_LINK_COMMAND } from "@lexical/link";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import { mergeRegister } from "@lexical/utils";

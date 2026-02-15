@@ -1,64 +1,17 @@
-/**
- * Copyright (c) Meta Platforms, Inc. and affiliates.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- *
- */
-
 import type {
   DOMConversionMap,
   DOMConversionOutput,
   DOMExportOutput,
-  EditorConfig,
   ElementFormatType,
-  LexicalEditor,
   LexicalNode,
   NodeKey,
   Spread,
 } from "lexical";
-import type { JSX } from "react";
 
-import { BlockWithAlignableContents } from "@lexical/react/LexicalBlockWithAlignableContents";
 import {
   DecoratorBlockNode,
   SerializedDecoratorBlockNode,
 } from "@lexical/react/LexicalDecoratorBlockNode";
-
-type YouTubeComponentProps = Readonly<{
-  className: Readonly<{
-    base: string;
-    focus: string;
-  }>;
-  format: ElementFormatType | null;
-  nodeKey: NodeKey;
-  videoID: string;
-}>;
-
-function YouTubeComponent({
-  className,
-  format,
-  nodeKey,
-  videoID,
-}: YouTubeComponentProps) {
-  return (
-    <BlockWithAlignableContents
-      className={className}
-      format={format}
-      nodeKey={nodeKey}
-    >
-      <iframe
-        width="560"
-        height="315"
-        src={`https://www.youtube-nocookie.com/embed/${videoID}`}
-        frameBorder="0"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        allowFullScreen={true}
-        title="YouTube video"
-      />
-    </BlockWithAlignableContents>
-  );
-}
 
 export type SerializedYouTubeNode = Spread<
   {
@@ -68,7 +21,7 @@ export type SerializedYouTubeNode = Spread<
 >;
 
 function $convertYoutubeElement(
-  domNode: HTMLElement
+  domNode: HTMLElement,
 ): null | DOMConversionOutput {
   const videoID = domNode.getAttribute("data-lexical-youtube");
   if (videoID) {
@@ -91,7 +44,7 @@ export class YouTubeNode extends DecoratorBlockNode {
 
   static importJSON(serializedNode: SerializedYouTubeNode): YouTubeNode {
     return $createYouTubeNode(serializedNode.videoID).updateFromJSON(
-      serializedNode
+      serializedNode,
     );
   }
 
@@ -114,12 +67,12 @@ export class YouTubeNode extends DecoratorBlockNode {
     element.setAttribute("height", "315");
     element.setAttribute(
       "src",
-      `https://www.youtube-nocookie.com/embed/${this.__id}`
+      `https://www.youtube-nocookie.com/embed/${this.__id}`,
     );
     element.setAttribute("frameborder", "0");
     element.setAttribute(
       "allow",
-      "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture",
     );
     element.setAttribute("allowfullscreen", "true");
     element.setAttribute("title", "YouTube video");
@@ -150,25 +103,9 @@ export class YouTubeNode extends DecoratorBlockNode {
 
   getTextContent(
     _includeInert?: boolean | undefined,
-    _includeDirectionless?: false | undefined
+    _includeDirectionless?: false | undefined,
   ): string {
     return `https://www.youtube.com/watch?v=${this.__id}`;
-  }
-
-  decorate(_editor: LexicalEditor, config: EditorConfig): JSX.Element {
-    const embedBlockTheme = config.theme.embedBlock || {};
-    const className = {
-      base: embedBlockTheme.base || "",
-      focus: embedBlockTheme.focus || "",
-    };
-    return (
-      <YouTubeComponent
-        className={className}
-        format={this.__format}
-        nodeKey={this.getKey()}
-        videoID={this.__id}
-      />
-    );
   }
 }
 
@@ -177,7 +114,7 @@ export function $createYouTubeNode(videoID: string): YouTubeNode {
 }
 
 export function $isYouTubeNode(
-  node: YouTubeNode | LexicalNode | null | undefined
+  node: YouTubeNode | LexicalNode | null | undefined,
 ): node is YouTubeNode {
   return node instanceof YouTubeNode;
 }

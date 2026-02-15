@@ -5,17 +5,15 @@
 <img alt="License" src="https://img.shields.io/npm/l/@scottjgilbert/lexical-blog-editor.svg?style=for-the-badge&labelColor=000000">
 </p>
 
-# Lexical Editor Documentation
+# Lexical Blog Editor Documentation
 
 A feature-rich, production-ready rich text editor designed for blog content management. Built on Meta's [Lexical](https://lexical.dev/) framework.
 
 ## Overview
 
-A feature-rich, production-ready rich text editor for blog content, built on Meta's [Lexical](https://lexical.dev/) framework. This package provides a comprehensive editing experience with extensive plugin support, custom nodes, and a full-featured toolbar.
+A feature-rich, production-ready rich text editor and viewer for blog content, built on Meta's [Lexical](https://lexical.dev/) framework. This package provides a comprehensive editing experience with extensive plugin support, custom nodes, and a full-featured toolbar.
 
-This editor is designed to be plug-and-play and is not customizable or designed for extensive configuration.
-
-> ⚠️ **Note**: Due to implementation complexity, this package does not include a Viewer component. Users can either render the **unsanitized** HTML outputted by the editor, or render the saved `EditorState` content using Lexical's core APIs or through a custom viewer component. I personally do not have plans to build a dedicated Viewer component at this time, but, if anyone is interested in making contributions towards this goal, it would be greatly appreciated.
+This editor is designed to be plug-and-play and is not customizable or designed for extensive configuration. It is intended to be used as a complete solution for blog content creation, with a focus on providing a wide range of features out of the box.
 
 ## Installation
 
@@ -31,8 +29,9 @@ yarn add @scottjgilbert/lexical-blog-editor
 
 This package requires the following peer dependencies:
 
-- React 18.0.0 or higher
-- React DOM 18.0.0 or higher
+- Lexical 0.40.0 or higher
+- React 18.0.0 or 19.0.0
+- React DOM 18.0.0 or 19.0.0
 
 ## Supported Browsers
 
@@ -48,28 +47,29 @@ This package requires the following peer dependencies:
 ### Basic Implementation
 
 ```tsx
+import { useState } from "react";
 import { Editor } from "@scottjgilbert/lexical-blog-editor";
+import { Viewer } from "@scottjgilbert/lexical-blog-editor/viewer";
 import type { EditorState } from "@scottjgilbert/lexical-blog-editor";
 
-import "@scottjgilbert/lexical-blog-editor/styles/output.css";
+import "@scottjgilbert/lexical-blog-editor/styles/ViewerTheme.css";
 
 function MyBlogEditor() {
-  let html = "";
+  const [savedState, setSavedState] = useState<string | null>(null);
 
-  const handleChange = (editorState: EditorState, html: string) => {
+  const handleChange = (editorState: EditorState) => {
     const json = JSON.stringify(editorState.toJSON());
-    console.log("Editor content:", json);
-    // Save to your database, state management, etc.
-    console.log("HTML content:", html);
+    setSavedState(json);
   };
 
   return (
-    <Editor
-      onChange={handleChange}
-      placeholder="Start writing your blog post..."
-    />
-    {/* Note that HTML is NOT sanitized */}
-    <div dangerouslySetInnerHTML={{ __html: html }}></div>
+    <>
+      <Editor
+        onChange={handleChange}
+        placeholder="Start writing your blog post..."
+      />
+      {savedState && <Viewer state={savedState} />}
+    </>
   );
 }
 ```
@@ -107,6 +107,21 @@ function MyBlogEditor({ savedContent }: { savedContent?: EditorState }) {
 | `placeholder`  | `string`                                           | `"Enter some text..."` | Placeholder text displayed when the editor is empty                               |
 | `initialState` | `EditorState`                                      | `undefined`            | Initial editor content state. If not provided, displays a default welcome message |
 
+### Viewer Component
+
+Import from:
+
+```tsx
+import { Viewer } from "@scottjgilbert/lexical-blog-editor/viewer";
+```
+
+#### Props
+
+| Prop       | Type                    | Default      | Description                                                                                               |
+| ---------- | ----------------------- | ------------ | --------------------------------------------------------------------------------------------------------- |
+| `state`    | `EditorState \| string` | **Required** | Serialized editor state string (from `JSON.stringify(editorState.toJSON())`) or an `EditorState` instance |
+| `sanitize` | `boolean`               | `true`       | Sanitizes generated HTML with DOMPurify and an iframe allowlist for YouTube, Figma, and Twitter embeds    |
+
 ## Features
 
 ### Rich Text Editing
@@ -127,7 +142,6 @@ function MyBlogEditor({ savedContent }: { savedContent?: EditorState }) {
 - **Embeds**: YouTube videos, Twitter/X posts, Figma designs
 - **Equations**: LaTeX/KaTeX mathematical equation support
 - **Horizontal Rules**: Visual section dividers
-- **Page Breaks**: Print-friendly page break markers
 - **Layouts**: Multi-column layouts with customizable containers
 - **Collapsible Sections**: Expandable/collapsible content blocks
 - **Date/Time**: Insert formatted date and time stamps
@@ -148,15 +162,16 @@ function MyBlogEditor({ savedContent }: { savedContent?: EditorState }) {
 - **Component Picker**: Slash commands (`/`) to quickly insert components
 - **Floating Toolbars**: Context-aware formatting toolbars
 - **Auto-linking**: Automatically converts URLs to clickable links
-- **Syntax Highlighting**: Code blocks with Prism-powered syntax highlighting
+- **Syntax Highlighting**: Code blocks with Shiki-powered syntax highlighting
 - **Undo/Redo**: Full history support with keyboard shortcuts
 - **Keyboard Shortcuts**: Comprehensive keyboard shortcut system
 - **Copy/Paste**: Smart paste handling with format preservation
+- **Viewer**: Read-only rendering component with sanitization and embed handling
 
-### Included Plugins
+### Included Plugins/Extensions
 
 <details>
-<summary>View all plugins (40+)</summary>
+<summary>View all (40+)</summary>
 
 - ActionsPlugin
 - AutoEmbedPlugin
@@ -179,7 +194,7 @@ function MyBlogEditor({ savedContent }: { savedContent?: EditorState }) {
 - FloatingTextFormatToolbarPlugin
 - HashtagPlugin
 - HistoryPlugin
-- HorizontalRulePlugin
+- HorizontalRule**Extension**
 - ImagesPlugin
 - KeywordsPlugin
 - LayoutPlugin
@@ -187,7 +202,6 @@ function MyBlogEditor({ savedContent }: { savedContent?: EditorState }) {
 - ListPlugin
 - MarkdownShortcutPlugin
 - MentionsPlugin
-- PageBreakPlugin
 - RichTextPlugin
 - ShortcutsPlugin
 - SpeechToTextPlugin
@@ -222,7 +236,6 @@ function MyBlogEditor({ savedContent }: { savedContent?: EditorState }) {
 - MarkNode
 - MentionNode
 - OverflowNode
-- PageBreakNode
 - SpecialTextNode
 - TableNode, TableCellNode, TableRowNode
 - TweetNode
@@ -232,7 +245,10 @@ function MyBlogEditor({ savedContent }: { savedContent?: EditorState }) {
 
 ## Styling
 
-See the [Styling Guide](./styling.md) for details on customizing the editor's appearance.
+See the [Styling Guide](./styling.md) for details on editor and viewer styling. The viewer ships with two style bundles:
+
+- `@scottjgilbert/lexical-blog-editor/styles/ViewerTheme.css`
+- `@scottjgilbert/lexical-blog-editor/styles/ViewerThemeComplete.css`
 
 ## TypeScript Support
 
@@ -242,21 +258,6 @@ This package is written in TypeScript and includes full type definitions. All ex
 import type { EditorProps } from "@scottjgilbert/lexical-blog-editor";
 import type { EditorState } from "@scottjgilbert/lexical-blog-editor";
 ```
-
-## Roadmap
-
-(If anyone is interested in contributing to these features, please reach out or make a fork/pull request!)
-
-- [ ] **Viewer Component**: Dedicated component for rendering saved EditorState as read-only DOM content
-- [ ] **Server-Side Rendering**: SSR support for Next.js and similar frameworks
-
-## Browser Support
-
-The editor supports all modern browsers:
-
-- Chrome/Edge (latest)
-- Firefox (latest)
-- Safari (latest)
 
 ## Contributing
 

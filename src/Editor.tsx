@@ -9,7 +9,7 @@ import { ClearEditorPlugin } from "@lexical/react/LexicalClearEditorPlugin";
 import { ClickableLinkPlugin } from "@lexical/react/LexicalClickableLinkPlugin";
 
 import { HashtagPlugin } from "@lexical/react/LexicalHashtagPlugin";
-import { HorizontalRulePlugin } from "@lexical/react/LexicalHorizontalRulePlugin";
+// import { HorizontalRulePlugin } from "@lexical/react/LexicalHorizontalRulePlugin";
 import { ListPlugin } from "@lexical/react/LexicalListPlugin";
 import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
 import { TabIndentationPlugin } from "@lexical/react/LexicalTabIndentationPlugin";
@@ -23,7 +23,8 @@ import ActionsPlugin from "./plugins/ActionsPlugin";
 import AutoEmbedPlugin from "./plugins/AutoEmbedPlugin";
 import AutoLinkPlugin from "./plugins/AutoLinkPlugin";
 import CodeActionMenuPlugin from "./plugins/CodeActionMenuPlugin";
-import CodeHighlightPrismPlugin from "./plugins/CodeHighlightPrismPlugin";
+// import CodeHighlightPrismPlugin from "./plugins/CodeHighlightPrismPlugin";
+import CodeHighlightShikiPlugin from "./plugins/CodeHighlightShikiPlugin";
 import CollapsiblePlugin from "./plugins/CollapsiblePlugin";
 import ComponentPickerPlugin from "./plugins/ComponentPickerPlugin";
 import DateTimePlugin from "./plugins/DateTimePlugin";
@@ -41,7 +42,6 @@ import { LayoutPlugin } from "./plugins/LayoutPlugin/LayoutPlugin";
 import LinkPlugin from "./plugins/LinkPlugin";
 import MarkdownShortcutPlugin from "./plugins/MarkdownShortcutPlugin";
 import MentionsPlugin from "./plugins/MentionsPlugin";
-import PageBreakPlugin from "./plugins/PageBreakPlugin";
 import ShortcutsPlugin from "./plugins/ShortcutsPlugin";
 import SpeechToTextPlugin from "./plugins/SpeechToTextPlugin";
 import TabFocusPlugin from "./plugins/TabFocusPlugin";
@@ -71,11 +71,12 @@ import { ToolbarContext } from "./context/ToolbarContext";
 
 import React, { useMemo } from "react";
 import PlaygroundEditorTheme from "./themes/PlaygroundEditorTheme";
-import PlaygroundNodes from "./nodes/PlaygroundNodes";
+import PlaygroundNodes from "./nodes/PlaygroundNodes/PlaygroundNodes";
 import { buildHTMLConfig } from "./buildHTMLConfig";
 
 import "./index.css";
 import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
+import { HorizontalRuleExtension } from "@lexical/extension";
 
 function $prepopulatedRichText(): void {
   const root = $getRoot();
@@ -196,7 +197,7 @@ export const EditorComponent = ({
         />
         <OnChangePlugin onChange={onChange} />
         <MarkdownShortcutPlugin />
-        <CodeHighlightPrismPlugin />
+        <CodeHighlightShikiPlugin />
         <ListPlugin hasStrictIndent={true} />
         <CheckListPlugin />
         <TablePlugin />
@@ -208,12 +209,10 @@ export const EditorComponent = ({
         <YouTubePlugin />
         <FigmaPlugin />
         <ClickableLinkPlugin disabled={isEditable} />
-        <HorizontalRulePlugin />
         <EquationsPlugin />
         <TabFocusPlugin />
         <TabIndentationPlugin maxIndent={7} />
         <CollapsiblePlugin />
-        <PageBreakPlugin />
         <LayoutPlugin />
         {floatingAnchorElem && (
           <>
@@ -268,6 +267,7 @@ export const Editor: React.FC<EditorProps> = ({
         namespace: "BlogEditor",
         nodes: PlaygroundNodes,
         theme: PlaygroundEditorTheme,
+        dependencies: [HorizontalRuleExtension],
       }),
     [initialState],
   );

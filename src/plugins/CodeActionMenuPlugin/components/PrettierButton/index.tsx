@@ -9,7 +9,7 @@
  */
 import "./index.css";
 
-import { $isCodeNode } from "@lexical/code";
+import { $isCodeNode } from "../../../../nodes/CodeNode/CodeNode";
 import { $getNearestNodeFromDOMNode, LexicalEditor } from "lexical";
 import { Options } from "prettier";
 import { useState } from "react";
