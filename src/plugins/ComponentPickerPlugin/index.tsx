@@ -10,7 +10,7 @@
 
 import type { JSX } from "react";
 
-import { $createCodeNode } from "@lexical/code";
+import { $createCodeNode } from "../../nodes/CodeNode/CodeNode";
 import {
   INSERT_CHECK_LIST_COMMAND,
   INSERT_ORDERED_LIST_COMMAND,
@@ -18,7 +18,7 @@ import {
 } from "@lexical/list";
 import { INSERT_EMBED_COMMAND } from "@lexical/react/LexicalAutoEmbedPlugin";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
-import { INSERT_HORIZONTAL_RULE_COMMAND } from "@lexical/react/LexicalHorizontalRuleNode";
+import { INSERT_HORIZONTAL_RULE_COMMAND } from "@lexical/extension";
 import {
   LexicalTypeaheadMenuPlugin,
   MenuOption,
@@ -43,9 +43,8 @@ import { EmbedConfigs } from "../AutoEmbedPlugin";
 import { INSERT_COLLAPSIBLE_COMMAND } from "../CollapsiblePlugin";
 import { INSERT_DATETIME_COMMAND } from "../DateTimePlugin";
 import { InsertEquationDialog } from "../EquationsPlugin";
-import { INSERT_IMAGE_COMMAND, InsertImageDialog } from "../ImagesPlugin";
+import { InsertImageDialog } from "../ImagesPlugin";
 import InsertLayoutDialog from "../LayoutPlugin/InsertLayoutDialog";
-import { INSERT_PAGE_BREAK } from "../PageBreakPlugin";
 import { InsertTableDialog } from "../TablePlugin";
 
 export class ComponentPickerOption extends MenuOption {
@@ -235,11 +234,6 @@ export function getBaseOptions(editor: LexicalEditor, showModal: ShowModal) {
       keywords: ["horizontal rule", "divider", "hr"],
       onSelect: () =>
         editor.dispatchCommand(INSERT_HORIZONTAL_RULE_COMMAND, undefined),
-    }),
-    new ComponentPickerOption("Page Break", {
-      icon: <i className="icon page-break" />,
-      keywords: ["page break", "divider"],
-      onSelect: () => editor.dispatchCommand(INSERT_PAGE_BREAK, undefined),
     }),
     ...EmbedConfigs.map(
       (embedConfig) =>

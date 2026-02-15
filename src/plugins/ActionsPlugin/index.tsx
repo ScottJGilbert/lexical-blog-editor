@@ -11,7 +11,7 @@
 import type { LexicalEditor } from "lexical";
 import type { JSX } from "react";
 
-import { $createCodeNode, $isCodeNode } from "@lexical/code";
+import { $createCodeNode, $isCodeNode } from "../../nodes/CodeNode/CodeNode";
 import {
   editorStateFromSerializedDocument,
   exportFile,

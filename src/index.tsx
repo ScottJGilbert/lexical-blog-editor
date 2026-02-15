@@ -1,5 +1,5 @@
-export { Editor } from "./Editor";
-export type { EditorProps } from "./Editor";
-export { Editor as default } from "./Editor";
+export { Editor } from "./EditorExport";
+export type { EditorProps } from "./EditorExport";
+export { Editor as default } from "./EditorExport";
 
 export type { EditorState } from "lexical";

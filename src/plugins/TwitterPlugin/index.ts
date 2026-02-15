@@ -19,7 +19,7 @@ import {
 } from "lexical";
 import { useEffect } from "react";
 
-import { $createTweetNode, TweetNode } from "../../nodes/TweetNode";
+import { $createTweetNode, TweetNode } from "../../nodes/TweetNode/TweetNode";
 
 export const INSERT_TWEET_COMMAND: LexicalCommand<string> = createCommand(
   "INSERT_TWEET_COMMAND",
