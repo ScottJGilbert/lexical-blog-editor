@@ -41,7 +41,6 @@ import KeywordsPlugin from "./plugins/KeywordsPlugin";
 import { LayoutPlugin } from "./plugins/LayoutPlugin/LayoutPlugin";
 import LinkPlugin from "./plugins/LinkPlugin";
 import MarkdownShortcutPlugin from "./plugins/MarkdownShortcutPlugin";
-import MentionsPlugin from "./plugins/MentionsPlugin";
 import ShortcutsPlugin from "./plugins/ShortcutsPlugin";
 import SpeechToTextPlugin from "./plugins/SpeechToTextPlugin";
 import TabFocusPlugin from "./plugins/TabFocusPlugin";
@@ -177,7 +176,6 @@ export const EditorComponent = ({
         <ComponentPickerPlugin />
         <EmojiPickerPlugin />
         <AutoEmbedPlugin />
-        <MentionsPlugin />
         <EmojisPlugin />
         <HashtagPlugin />
         <KeywordsPlugin />

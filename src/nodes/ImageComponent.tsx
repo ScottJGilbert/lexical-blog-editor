@@ -49,7 +49,6 @@ import brokenImage from "../images/image-broken.svg";
 import EmojisPlugin from "../plugins/EmojisPlugin";
 import KeywordsPlugin from "../plugins/KeywordsPlugin";
 import LinkPlugin from "../plugins/LinkPlugin";
-import MentionsPlugin from "../plugins/MentionsPlugin";
 import ContentEditable from "../ui/ContentEditable";
 import ImageResizer from "../ui/ImageResizer";
 import { $isCaptionEditorEmpty, $isImageNode } from "./ImageNode";
@@ -78,8 +77,8 @@ function DisableCaptionOnBlur({
         }
         return false;
       },
-      COMMAND_PRIORITY_EDITOR
-    )
+      COMMAND_PRIORITY_EDITOR,
+    ),
   );
   return null;
 }
@@ -255,7 +254,7 @@ export default function ImageComponent({
         const selection = $getSelection();
         return $isNodeSelection(selection) && selection.has(nodeKey);
       }),
-    [editor, isSelected, nodeKey]
+    [editor, isSelected, nodeKey],
   );
 
   const $onEnter = useCallback(
@@ -284,7 +283,7 @@ export default function ImageComponent({
       }
       return false;
     },
-    [caption, nodeKey, showCaption]
+    [caption, nodeKey, showCaption],
   );
 
   const $onEscape = useCallback(
@@ -305,7 +304,7 @@ export default function ImageComponent({
       }
       return false;
     },
-    [caption, editor, setSelected]
+    [caption, editor, setSelected],
   );
 
   const onClick = useCallback(
@@ -327,7 +326,7 @@ export default function ImageComponent({
 
       return false;
     },
-    [isResizing, isSelected, setSelected, clearSelection]
+    [isResizing, isSelected, setSelected, clearSelection],
   );
 
   const onRightClick = useCallback(
@@ -344,7 +343,7 @@ export default function ImageComponent({
         }
       });
     },
-    [editor]
+    [editor],
   );
 
   useEffect(() => {
@@ -355,7 +354,7 @@ export default function ImageComponent({
           activeEditorRef.current = activeEditor;
           return false;
         },
-        COMMAND_PRIORITY_LOW
+        COMMAND_PRIORITY_LOW,
       ),
       editor.registerCommand(
         DRAGSTART_COMMAND,
@@ -368,8 +367,8 @@ export default function ImageComponent({
           }
           return false;
         },
-        COMMAND_PRIORITY_LOW
-      )
+        COMMAND_PRIORITY_LOW,
+      ),
     );
   }, [editor]);
   useEffect(() => {
@@ -378,18 +377,18 @@ export default function ImageComponent({
       editor.registerCommand<MouseEvent>(
         CLICK_COMMAND,
         onClick,
-        COMMAND_PRIORITY_LOW
+        COMMAND_PRIORITY_LOW,
       ),
       editor.registerCommand<MouseEvent>(
         RIGHT_CLICK_IMAGE_COMMAND,
         onClick,
-        COMMAND_PRIORITY_LOW
+        COMMAND_PRIORITY_LOW,
       ),
       editor.registerCommand(KEY_ENTER_COMMAND, $onEnter, COMMAND_PRIORITY_LOW),
       editor.registerCommand(
         KEY_ESCAPE_COMMAND,
         $onEscape,
-        COMMAND_PRIORITY_LOW
+        COMMAND_PRIORITY_LOW,
       ),
       editor.registerRootListener((rootElement) => {
         rootCleanup();
@@ -400,7 +399,7 @@ export default function ImageComponent({
             rootElement.removeEventListener("contextmenu", onRightClick);
         }
       }),
-      () => rootCleanup()
+      () => rootCleanup(),
     );
   }, [editor, $onEnter, $onEscape, onClick, onRightClick]);
 
@@ -422,7 +421,7 @@ export default function ImageComponent({
 
   const onResizeEnd = (
     nextWidth: "inherit" | number,
-    nextHeight: "inherit" | number
+    nextHeight: "inherit" | number,
   ) => {
     // Delay hiding the resize bars for click case
     setTimeout(() => {
@@ -471,7 +470,6 @@ export default function ImageComponent({
           <div className="image-caption-container">
             <LexicalNestedComposer initialEditor={caption}>
               <DisableCaptionOnBlur setShowCaption={setShowCaption} />
-              <MentionsPlugin />
               <LinkPlugin />
               <EmojisPlugin />
               <HashtagPlugin />
