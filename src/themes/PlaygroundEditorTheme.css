@@ -167,6 +167,7 @@
   overflow-x: auto;
   position: relative;
   tab-size: 2;
+  white-space: pre;
 }
 .PlaygroundEditorTheme__code:before {
   content: attr(data-gutter);
@@ -180,6 +181,9 @@
   white-space: pre-wrap;
   text-align: right;
   min-width: 25px;
+}
+.PlaygroundEditorTheme__code span {
+  white-space: nowrap;
 }
 .PlaygroundEditorTheme__tableScrollableWrapper {
   overflow-x: auto;
