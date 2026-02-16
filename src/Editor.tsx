@@ -61,7 +61,7 @@ import {
   $createTextNode,
 } from "lexical";
 
-import { EditorState } from "./index";
+import type { EditorState } from "lexical";
 
 import { LexicalExtensionComposer } from "@lexical/react/LexicalExtensionComposer";
 import { TableContext } from "./plugins/TablePlugin";
