@@ -9,7 +9,6 @@ import { ClearEditorPlugin } from "@lexical/react/LexicalClearEditorPlugin";
 import { ClickableLinkPlugin } from "@lexical/react/LexicalClickableLinkPlugin";
 
 import { HashtagPlugin } from "@lexical/react/LexicalHashtagPlugin";
-// import { HorizontalRulePlugin } from "@lexical/react/LexicalHorizontalRulePlugin";
 import { ListPlugin } from "@lexical/react/LexicalListPlugin";
 import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
 import { TabIndentationPlugin } from "@lexical/react/LexicalTabIndentationPlugin";
@@ -36,6 +35,7 @@ import EquationsPlugin from "./plugins/EquationsPlugin";
 import FigmaPlugin from "./plugins/FigmaPlugin";
 import FloatingLinkEditorPlugin from "./plugins/FloatingLinkEditorPlugin";
 import FloatingTextFormatToolbarPlugin from "./plugins/FloatingTextFormatToolbarPlugin";
+import HorizontalRulePlugin from "./plugins/HorizontalRulePlugin";
 import ImagesPlugin from "./plugins/ImagesPlugin";
 import KeywordsPlugin from "./plugins/KeywordsPlugin";
 import { LayoutPlugin } from "./plugins/LayoutPlugin/LayoutPlugin";
@@ -74,7 +74,7 @@ import { buildHTMLConfig } from "./buildHTMLConfig";
 
 import "./index.css";
 import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
-import { HorizontalRuleExtension } from "@lexical/extension";
+// import { HorizontalRuleExtension } from "@lexical/extension";
 
 function $prepopulatedRichText(): void {
   const root = $getRoot();
@@ -169,6 +169,7 @@ export const EditorComponent = ({
         <AutoEmbedPlugin />
         <EmojisPlugin />
         <HashtagPlugin />
+        <HorizontalRulePlugin />
         <KeywordsPlugin />
         <SpeechToTextPlugin />
         <AutoLinkPlugin />
@@ -256,7 +257,7 @@ export const Editor: React.FC<EditorProps> = ({
         namespace: "BlogEditor",
         nodes: PlaygroundNodes,
         theme: PlaygroundEditorTheme,
-        dependencies: [HorizontalRuleExtension],
+        // dependencies: [HorizontalRuleExtension],
       }),
     [initialState],
   );
