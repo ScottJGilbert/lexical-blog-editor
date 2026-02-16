@@ -125,9 +125,7 @@ export const EditorComponent = ({
     useEffect(() => {
       // most listeners return a teardown function that can be called to clean them up.
       return editor.registerUpdateListener(({ editorState }) => {
-        editor.read(() => {
-          onChange(editorState);
-        });
+        onChange(editorState);
       });
     }, [editor, onChange]);
     return null;
