@@ -170,7 +170,7 @@
   white-space: pre;
 }
 .ViewerTheme__code span {
-  white-space: nowrap;
+  white-space: pre;
 }
 /* Apply padding if the pre is empty OR if the last child isn't a span */
 .ViewerTheme__code:empty::after,

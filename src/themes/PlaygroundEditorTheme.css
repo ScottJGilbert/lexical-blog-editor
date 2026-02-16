@@ -183,7 +183,7 @@
   min-width: 25px;
 }
 .PlaygroundEditorTheme__code span {
-  white-space: nowrap;
+  white-space: pre;
 }
 .PlaygroundEditorTheme__tableScrollableWrapper {
   overflow-x: auto;
