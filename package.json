@@ -1,6 +1,6 @@
 {
   "name": "@scottjgilbert/lexical-blog-editor",
-  "version": "1.0.0-beta.1",
+  "version": "1.0.0-beta.2",
   "description": "Prebuilt components for editing and rendering rich blog content with Lexical. Modified wrapper of the Lexical Playground editor.",
   "main": "./build/index.js",
   "types": "./build/index.d.ts",

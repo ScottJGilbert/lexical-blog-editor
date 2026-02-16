@@ -167,6 +167,10 @@
   overflow-x: auto;
   position: relative;
   tab-size: 2;
+  white-space: pre;
+}
+.ViewerTheme__code span {
+  white-space: nowrap;
 }
 /* Apply padding if the pre is empty OR if the last child isn't a span */
 .ViewerTheme__code:empty::after,
