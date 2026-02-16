@@ -193,7 +193,7 @@ import { Viewer } from "@scottjgilbert/lexical-blog-editor/viewer";
 - FloatingTextFormatToolbarPlugin
 - HashtagPlugin
 - HistoryPlugin
-- HorizontalRule**Extension**
+- HorizontalRulePlugin
 - ImagesPlugin
 - KeywordsPlugin
 - LayoutPlugin
