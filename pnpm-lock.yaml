@@ -56,6 +56,9 @@ importers:
       '@scottjgilbert/lexical-blog-editor':
         specifier: workspace:*
         version: link:packages/lexical-blog-editor
+      '@scottjgilbert/lexical-blog-editor-ext-callout':
+        specifier: workspace:*
+        version: link:packages/ext-callout
       '@types/express':
         specifier: ^5.0.6
         version: 5.0.6
@@ -95,6 +98,27 @@ importers:
       vitest:
         specifier: ^3.2.7
         version: 3.2.7(@edge-runtime/vm@5.0.0)(@types/node@20.19.32)(happy-dom@20.5.0)(jiti@2.6.1)(jsdom@26.1.0)(lightningcss@1.30.2)
+
+  packages/ext-callout:
+    devDependencies:
+      '@lexical/react':
+        specifier: ^0.40.0
+        version: 0.40.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(yjs@13.6.29)
+      '@lexical/utils':
+        specifier: ^0.40.0
+        version: 0.40.0
+      '@scottjgilbert/lexical-blog-editor':
+        specifier: workspace:*
+        version: link:../lexical-blog-editor
+      '@types/react':
+        specifier: ^19.2.13
+        version: 19.2.13
+      lexical:
+        specifier: ^0.40.0
+        version: 0.40.0
+      react:
+        specifier: ^19.0.0
+        version: 19.2.4
 
   packages/lexical-blog-editor:
     dependencies:

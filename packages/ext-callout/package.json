@@ -1,0 +1,59 @@
+{
+  "name": "@scottjgilbert/lexical-blog-editor-ext-callout",
+  "version": "2.0.0-alpha.0",
+  "description": "Callout (info / tip / warning / danger) blocks for @scottjgilbert/lexical-blog-editor: editor node + plugin, and renderer for the server, React and HTML viewers.",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": { "types": "./dist/index.d.ts", "default": "./dist/index.js" },
+      "require": { "types": "./dist/index.d.cts", "default": "./dist/index.cjs" }
+    },
+    "./render": {
+      "import": { "types": "./dist/render.d.ts", "default": "./dist/render.js" },
+      "require": { "types": "./dist/render.d.cts", "default": "./dist/render.cjs" }
+    },
+    "./editor": {
+      "import": { "types": "./dist/editor.d.ts", "default": "./dist/editor.js" },
+      "require": { "types": "./dist/editor.d.cts", "default": "./dist/editor.cjs" }
+    },
+    "./styles.css": "./dist/styles.css",
+    "./package.json": "./package.json"
+  },
+  "sideEffects": ["**/*.css"],
+  "files": ["dist", "README.md"],
+  "scripts": {
+    "build": "node ../lexical-blog-editor/scripts/clean.mjs && tsup && node scripts/copy-assets.mjs",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "keywords": ["lexical", "callout", "extension", "rich-text"],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ScottJGilbert/lexical-blog-editor.git",
+    "directory": "packages/ext-callout"
+  },
+  "peerDependencies": {
+    "@scottjgilbert/lexical-blog-editor": "^2.0.0-alpha.0",
+    "@lexical/react": "^0.40.0",
+    "@lexical/utils": "^0.40.0",
+    "lexical": "^0.40.0",
+    "react": "^18.0.0 || ^19.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@lexical/react": { "optional": true },
+    "@lexical/utils": { "optional": true },
+    "lexical": { "optional": true },
+    "react": { "optional": true }
+  },
+  "devDependencies": {
+    "@lexical/react": "^0.40.0",
+    "@lexical/utils": "^0.40.0",
+    "@scottjgilbert/lexical-blog-editor": "workspace:*",
+    "@types/react": "^19.2.13",
+    "lexical": "^0.40.0",
+    "react": "^19.0.0"
+  }
+}

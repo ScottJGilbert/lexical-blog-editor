@@ -8,6 +8,7 @@ import { build } from "esbuild";
 import { join } from "node:path";
 
 const pkg = join(__dirname, "..", "..", "packages", "lexical-blog-editor");
+const calloutPkg = join(__dirname, "..", "..", "packages", "ext-callout");
 
 async function bundle(entry: string, opts: { platform: "neutral" | "browser"; external?: string[] }) {
   const result = await build({
@@ -52,6 +53,28 @@ describe("environment-agnostic entry points", () => {
       bundle: true, write: false, metafile: true, platform: "neutral", format: "esm", logLevel: "silent",
     });
     expect(Object.keys(result.metafile!.inputs).some((i) => i.includes("node_modules"))).toBe(false);
+  });
+});
+
+describe("extension packages", () => {
+  it("ext-callout/render bundles standalone (no React, no Lexical, no editor)", async () => {
+    const result = await build({
+      entryPoints: [join(calloutPkg, "dist/render.js")],
+      bundle: true, minify: true, write: false, metafile: true, platform: "neutral", format: "esm", logLevel: "silent",
+      mainFields: ["module", "main"],
+    });
+    const inputs = Object.keys(result.metafile!.inputs);
+    expect(inputs.some((i) => /node_modules\/(react|lexical|@lexical)/.test(i))).toBe(false);
+    expect(inputs.some((i) => i.includes("dist/editor/"))).toBe(false);
+  });
+  it("ext-callout/editor does not bundle the host package (types-only import)", async () => {
+    const result = await build({
+      entryPoints: [join(calloutPkg, "dist/editor.js")],
+      bundle: true, write: false, metafile: true, platform: "browser", format: "esm", logLevel: "silent",
+      external: ["react", "react/jsx-runtime", "lexical", "@lexical/*"],
+    });
+    const inputs = Object.keys(result.metafile!.inputs);
+    expect(inputs.some((i) => i.includes("lexical-blog-editor/dist"))).toBe(false);
   });
 });
 
