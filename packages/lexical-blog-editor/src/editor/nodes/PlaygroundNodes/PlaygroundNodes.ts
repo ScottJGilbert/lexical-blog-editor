@@ -35,6 +35,10 @@ import { LayoutContainerNode } from "../LayoutContainerNode";
 import { LayoutItemNode } from "../LayoutItemNode";
 import { MentionNode } from "../MentionNode";
 import { SpecialTextNode } from "../SpecialTextNode";
+import { AudioNode } from "../Media/AudioNode";
+import { FileNode } from "../Media/FileNode";
+import { VideoNode } from "../Media/VideoNode";
+import { UploadPlaceholderNode } from "../../upload/UploadPlaceholderNode";
 import { TweetNode } from "../TweetNode/TweetNode";
 import { YouTubeNode } from "../YouTubeNode/YouTubeNode";
 
@@ -69,6 +73,10 @@ const PlaygroundNodes: Array<Klass<LexicalNode>> = [
   LayoutItemNode,
   SpecialTextNode,
   DateTimeNode,
+  VideoNode,
+  AudioNode,
+  FileNode,
+  UploadPlaceholderNode,
 ];
 
 export default PlaygroundNodes;

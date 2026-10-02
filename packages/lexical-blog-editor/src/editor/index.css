@@ -1808,3 +1808,98 @@ button.item.dropdown-item-active i {
 .rdp-dropdown {
   background-color: var(--color-bg-surface);
 }
+
+/* ---- Media: video / audio / file icons ---- */
+i.video,
+i.audio,
+i.file {
+  background-size: contain;
+  display: inline-block;
+  height: 16px;
+  width: 16px;
+  vertical-align: -0.25em;
+  margin-right: 8px;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+i.video {
+  background-image: url(images/icons/video.svg);
+}
+i.audio {
+  background-image: url(images/icons/audio.svg);
+}
+i.file {
+  background-image: url(images/icons/paperclip.svg);
+}
+
+/* ---- Media: upload placeholder ---- */
+.LexicalBlogEditor__uploadPlaceholder {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 10px;
+  border: 1px dashed var(--color-border, #bbb);
+  border-radius: 6px;
+  background: var(--color-bg-surface, #fff);
+  font-size: 13px;
+  line-height: 1.4;
+  user-select: none;
+  vertical-align: middle;
+}
+.LexicalBlogEditor__uploadSpinner {
+  width: 12px;
+  height: 12px;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: LexicalBlogEditor__spin 0.8s linear infinite;
+}
+.LexicalBlogEditor__uploadName {
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.LexicalBlogEditor__uploadCancel {
+  border: 0;
+  background: none;
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+  padding: 0 2px;
+}
+@keyframes LexicalBlogEditor__spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ---- Media: file attachment ---- */
+.LexicalBlogEditor__file {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 12px;
+  border: 1px solid var(--color-border, #ddd);
+  border-radius: 6px;
+}
+.LexicalBlogEditor__fileSize {
+  opacity: 0.65;
+  font-size: 0.9em;
+}
+
+/* ---- SSR / pre-hydration placeholder ---- */
+.LexicalBlogEditor__loading {
+  padding: 16px;
+}
+.LexicalBlogEditor__skeleton {
+  height: 40px;
+  border-radius: 4px;
+  background: #e5e7eb;
+  animation: LexicalBlogEditor__pulse 1.5s ease-in-out infinite;
+}
+@keyframes LexicalBlogEditor__pulse {
+  50% {
+    opacity: 0.5;
+  }
+}

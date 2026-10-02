@@ -509,7 +509,7 @@ const figma: NodeRenderer<Loose> = (node) => {
 
 // Base64 (UTF-8) without relying on btoa/Buffer so every runtime agrees.
 const B64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-function toBase64(input: string): string {
+export function toBase64(input: string): string {
   const bytes = new TextEncoder().encode(input);
   let out = "";
   for (let i = 0; i < bytes.length; i += 3) {
@@ -673,6 +673,8 @@ export const builtinRenderExtension = defineRenderExtension({
     hashtag,
     specialText,
     mention,
+    // In-flight uploads are editor-only UI; never part of the output.
+    "upload-placeholder": () => null,
     // Transparent wrappers: render their children only.
     mark: root,
     overflow: root,

@@ -15,7 +15,7 @@ import { TabIndentationPlugin } from "@lexical/react/LexicalTabIndentationPlugin
 import { TablePlugin } from "@lexical/react/LexicalTablePlugin";
 import { useLexicalEditable } from "@lexical/react/useLexicalEditable";
 import { CAN_USE_DOM } from "@lexical/utils";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 /* Custom Plugins */
 import ActionsPlugin from "./plugins/ActionsPlugin";
@@ -27,7 +27,6 @@ import CodeHighlightShikiPlugin from "./plugins/CodeHighlightShikiPlugin";
 import CollapsiblePlugin from "./plugins/CollapsiblePlugin";
 import ComponentPickerPlugin from "./plugins/ComponentPickerPlugin";
 import DateTimePlugin from "./plugins/DateTimePlugin";
-import DragDropPaste from "./plugins/DragDropPastePlugin";
 import DraggableBlockPlugin from "./plugins/DraggableBlockPlugin";
 import EmojiPickerPlugin from "./plugins/EmojiPickerPlugin";
 import EmojisPlugin from "./plugins/EmojisPlugin";
@@ -38,6 +37,8 @@ import FloatingTextFormatToolbarPlugin from "./plugins/FloatingTextFormatToolbar
 import HorizontalRulePlugin from "./plugins/HorizontalRulePlugin";
 import ImagesPlugin from "./plugins/ImagesPlugin";
 import KeywordsPlugin from "./plugins/KeywordsPlugin";
+import MediaPlugin from "./plugins/MediaPlugin";
+import MediaUploadPlugin from "./plugins/MediaUploadPlugin";
 import { LayoutPlugin } from "./plugins/LayoutPlugin/LayoutPlugin";
 import LinkPlugin from "./plugins/LinkPlugin";
 import MarkdownShortcutPlugin from "./plugins/MarkdownShortcutPlugin";
@@ -61,7 +62,11 @@ import {
   $createTextNode,
 } from "lexical";
 
-import type { EditorState } from "lexical";
+import type {
+  AnyLexicalExtensionArgument,
+  EditorState,
+  LexicalEditor,
+} from "lexical";
 
 import { LexicalExtensionComposer } from "@lexical/react/LexicalExtensionComposer";
 import { TableContext } from "./plugins/TablePlugin";
@@ -71,6 +76,16 @@ import React, { useMemo } from "react";
 import PlaygroundEditorTheme from "./themes/PlaygroundEditorTheme";
 import PlaygroundNodes from "./nodes/PlaygroundNodes/PlaygroundNodes";
 import { buildHTMLConfig } from "./buildHTMLConfig";
+import {
+  resolveEditorExtensions,
+  type EditorExtension,
+  type EditorPluginProps,
+} from "./extensions";
+import { EditorExtensionsContext } from "./extensions/context";
+import { UploadManagerContext } from "./upload/context";
+import { UploadManager } from "./upload/UploadManager";
+import type { MediaUploadOptions } from "./upload/types";
+import type { ComponentType, ReactNode } from "react";
 
 import "./index.css";
 import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
@@ -86,18 +101,69 @@ function $prepopulatedRichText(): void {
   root.append(paragraph);
 }
 
-export interface EditorProps {
+export interface EditorProps extends MediaUploadOptions {
   placeholder?: string;
-  initialState?: EditorState;
+  /** Initial content: a saved JSON string or an `EditorState`. */
+  initialState?: EditorState | string;
+  /** Called on every editor update with the new state. */
   onChange: (state: EditorState) => void;
+  /**
+   * Blog-editor extensions (nodes, plugins, menu entries, theme). See
+   * `defineEditorExtension`. Pass a stable array (module constant or `useMemo`).
+   */
+  extensions?: ReadonlyArray<EditorExtension>;
+  /**
+   * Plain Lexical extensions (`defineExtension`, `configExtension`), installed
+   * as dependencies of the editor exactly as Lexical documents.
+   */
+  lexicalExtensions?: ReadonlyArray<AnyLexicalExtensionArgument>;
+  /** Extra React children rendered inside the editor (your own Lexical plugins). */
+  children?: ReactNode;
+  /** Called once with the Lexical editor instance. */
+  onReady?: (editor: LexicalEditor) => void;
+}
+
+function OnChangePlugin({
+  onChange,
+}: {
+  onChange: (state: EditorState) => void;
+}) {
+  const [editor] = useLexicalComposerContext();
+  // Keep the latest callback without re-registering the listener.
+  const latest = useRef(onChange);
+  latest.current = onChange;
+  useEffect(
+    () =>
+      editor.registerUpdateListener(({ editorState }) => {
+        latest.current(editorState);
+      }),
+    [editor],
+  );
+  return null;
+}
+
+function ReadyPlugin({ onReady }: { onReady?: (editor: LexicalEditor) => void }) {
+  const [editor] = useLexicalComposerContext();
+  useEffect(() => {
+    onReady?.(editor);
+    // Only on mount: the editor instance never changes.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [editor]);
+  return null;
 }
 
 export const EditorComponent = ({
   placeholder = "Enter some text...",
   onChange,
+  onReady,
+  extensionPlugins = [],
+  children,
 }: {
   placeholder?: string;
   onChange: (state: EditorState) => void;
+  onReady?: (editor: LexicalEditor) => void;
+  extensionPlugins?: ReadonlyArray<ComponentType<EditorPluginProps>>;
+  children?: ReactNode;
 }) => {
   const isEditable = useLexicalEditable();
 
@@ -114,22 +180,6 @@ export const EditorComponent = ({
       setFloatingAnchorElem(_floatingAnchorElem);
     }
   };
-
-  function OnChangePlugin({
-    onChange,
-  }: {
-    onChange: (state: EditorState) => void;
-  }) {
-    const [editor] = useLexicalComposerContext();
-    // Wrap our listener in useEffect to handle the teardown and avoid stale references.
-    useEffect(() => {
-      // most listeners return a teardown function that can be called to clean them up.
-      return editor.registerUpdateListener(({ editorState }) => {
-        onChange(editorState);
-      });
-    }, [editor, onChange]);
-    return null;
-  }
 
   useEffect(() => {
     const updateViewPortWidth = () => {
@@ -161,7 +211,9 @@ export const EditorComponent = ({
         setIsLinkEditMode={setIsLinkEditMode}
       />
       <div className={`editor-container`}>
-        <DragDropPaste />
+        <MediaUploadPlugin />
+        <MediaPlugin />
+        <ReadyPlugin onReady={onReady} />
         <AutoFocusPlugin />
         <ClearEditorPlugin />
         <ComponentPickerPlugin />
@@ -228,6 +280,14 @@ export const EditorComponent = ({
             />
           </>
         )}
+        {extensionPlugins.map((Plugin, index) => (
+          <Plugin
+            key={index}
+            anchorElem={floatingAnchorElem}
+            isEditable={isEditable}
+          />
+        ))}
+        {children}
         <ActionsPlugin
           shouldPreserveNewLinesInMarkdown={true}
           useCollabV2={false}
@@ -247,30 +307,74 @@ export const Editor: React.FC<EditorProps> = ({
   placeholder = "Enter some text...",
   initialState,
   onChange,
+  extensions,
+  lexicalExtensions,
+  children,
+  onReady,
+  ...uploadOptions
 }: EditorProps) => {
-  const app = useMemo(
-    () =>
-      defineExtension({
-        $initialEditorState: initialState ?? $prepopulatedRichText,
-        html: buildHTMLConfig(),
-        name: "BlogEditor",
-        namespace: "BlogEditor",
-        nodes: PlaygroundNodes,
-        theme: PlaygroundEditorTheme,
-        // dependencies: [HorizontalRuleExtension],
-      }),
-    [initialState],
+  const resolved = useMemo(
+    () => resolveEditorExtensions(extensions),
+    [extensions],
+  );
+
+  // The manager reads the latest options on every call, so inline `onUpload`
+  // handlers never go stale and never recreate the manager.
+  const uploadRef = useRef<MediaUploadOptions>(uploadOptions);
+  uploadRef.current = uploadOptions;
+  const manager = useMemo(() => new UploadManager(() => uploadRef.current), []);
+  useEffect(
+    () => manager.subscribe((event) => uploadRef.current.onUploadEvent?.(event)),
+    [manager],
+  );
+
+  const app = useMemo(() => {
+    const base = buildHTMLConfig();
+    return defineExtension({
+      $initialEditorState: initialState ?? $prepopulatedRichText,
+      html: {
+        import: { ...(base.import ?? {}), ...(resolved.html.import ?? {}) },
+        export: new Map([
+          ...(base.export ?? []),
+          ...(resolved.html.export ?? []),
+        ]),
+      },
+      name: "BlogEditor",
+      namespace: "BlogEditor",
+      nodes: [...PlaygroundNodes, ...resolved.nodes],
+      theme: { ...PlaygroundEditorTheme, ...resolved.theme },
+      dependencies: [
+        ...resolved.lexicalExtensions,
+        ...(lexicalExtensions ?? []),
+      ],
+    });
+  }, [initialState, resolved, lexicalExtensions]);
+
+  const menus = useMemo(
+    () => ({ slashMenu: resolved.slashMenu, insertMenu: resolved.insertMenu }),
+    [resolved],
   );
 
   return (
     <div className="editor-shell">
-      <LexicalExtensionComposer extension={app} contentEditable={null}>
-        <TableContext>
-          <ToolbarContext>
-            {<EditorComponent placeholder={placeholder} onChange={onChange} />}
-          </ToolbarContext>
-        </TableContext>
-      </LexicalExtensionComposer>
+      <UploadManagerContext.Provider value={manager}>
+        <EditorExtensionsContext.Provider value={menus}>
+          <LexicalExtensionComposer extension={app} contentEditable={null}>
+            <TableContext>
+              <ToolbarContext>
+                <EditorComponent
+                  placeholder={placeholder}
+                  onChange={onChange}
+                  onReady={onReady}
+                  extensionPlugins={resolved.plugins}
+                >
+                  {children}
+                </EditorComponent>
+              </ToolbarContext>
+            </TableContext>
+          </LexicalExtensionComposer>
+        </EditorExtensionsContext.Provider>
+      </UploadManagerContext.Provider>
     </div>
   );
 };

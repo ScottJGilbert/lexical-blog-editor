@@ -80,6 +80,9 @@ import { INSERT_COLLAPSIBLE_COMMAND } from "../CollapsiblePlugin";
 import { INSERT_DATETIME_COMMAND } from "../DateTimePlugin";
 import { InsertEquationDialog } from "../EquationsPlugin";
 import { InsertImageDialog } from "../ImagesPlugin";
+import { InsertMediaDialog } from "../MediaPlugin";
+import { useEditorExtensions } from "../../extensions/context";
+import { useUploadManager } from "../../upload/context";
 import InsertLayoutDialog from "../LayoutPlugin/InsertLayoutDialog";
 import { SHORTCUTS } from "../ShortcutsPlugin/shortcuts";
 import { InsertTableDialog } from "../TablePlugin";
@@ -563,6 +566,9 @@ export default function ToolbarPlugin({
     null,
   );
   const [modal, showModal] = useModal();
+  const extensionMenu = useEditorExtensions();
+  const uploadManager = useUploadManager();
+  const enabledKinds = uploadManager?.enabledKinds() ?? ["image", "video", "audio", "file"];
   const [isEditable, setIsEditable] = useState(() => editor.isEditable());
   const { toolbarState, updateToolbarState } = useToolbarState();
 
@@ -1327,20 +1333,44 @@ export default function ToolbarPlugin({
                   <i className="icon horizontal-rule" />
                   <span className="text">Horizontal Rule</span>
                 </DropDownItem>
-                <DropDownItem
-                  onClick={() => {
-                    showModal("Insert Image", (onClose) => (
-                      <InsertImageDialog
-                        activeEditor={activeEditor}
-                        onClose={onClose}
-                      />
-                    ));
-                  }}
-                  className="item"
-                >
-                  <i className="icon image" />
-                  <span className="text">Image</span>
-                </DropDownItem>
+                {enabledKinds.includes("image") && (
+                  <DropDownItem
+                    onClick={() => {
+                      showModal("Insert Image", (onClose) => (
+                        <InsertImageDialog
+                          activeEditor={activeEditor}
+                          onClose={onClose}
+                        />
+                      ));
+                    }}
+                    className="item"
+                  >
+                    <i className="icon image" />
+                    <span className="text">Image</span>
+                  </DropDownItem>
+                )}
+                {(["video", "audio", "file"] as const)
+                  .filter((kind) => enabledKinds.includes(kind))
+                  .map((kind) => (
+                    <DropDownItem
+                      key={kind}
+                      onClick={() => {
+                        showModal(`Insert ${kind}`, (onClose) => (
+                          <InsertMediaDialog
+                            kind={kind}
+                            activeEditor={activeEditor}
+                            onClose={onClose}
+                          />
+                        ));
+                      }}
+                      className="item"
+                    >
+                      <i className={`icon ${kind}`} />
+                      <span className="text">
+                        {kind[0].toUpperCase() + kind.slice(1)}
+                      </span>
+                    </DropDownItem>
+                  ))}
                 <DropDownItem
                   onClick={() => {
                     showModal("Insert Table", (onClose) => (
@@ -1418,6 +1448,18 @@ export default function ToolbarPlugin({
                   >
                     {embedConfig.icon}
                     <span className="text">{embedConfig.contentName}</span>
+                  </DropDownItem>
+                ))}
+                {extensionMenu.insertMenu.map((item) => (
+                  <DropDownItem
+                    key={item.title}
+                    onClick={() =>
+                      item.onSelect({ editor: activeEditor, showModal })
+                    }
+                    className="item"
+                  >
+                    {item.icon}
+                    <span className="text">{item.title}</span>
                   </DropDownItem>
                 ))}
               </DropDown>

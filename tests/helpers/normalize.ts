@@ -16,7 +16,9 @@ export function normalizeStyle(style: string): string {
     .filter(Boolean)
     .map((d) => {
       const i = d.indexOf(":");
-      return `${d.slice(0, i).trim().toLowerCase()}: ${hexToRgb(d.slice(i + 1).trim())}`;
+      // jsdom's CSSOM rounds numbers to 4 decimals; KaTeX's own output does not.
+      const value = hexToRgb(d.slice(i + 1).trim()).replace(/\d+\.\d{5,}/g, (n) => String(Number(Number(n).toFixed(4))));
+      return `${d.slice(0, i).trim().toLowerCase()}: ${value}`;
     })
     .sort()
     .join("; ");
@@ -47,7 +49,10 @@ export function normalizeDom(root: ParentNode, ignore: NormalizeOptions = {}): s
             .join("; ");
           if (!value) return null;
         }
-        if (a.name === "class") value = value.split(/\s+/).filter(Boolean).sort().join(" ");
+        if (a.name === "class") {
+          value = value.split(/\s+/).filter(Boolean).sort().join(" ");
+          if (!value) return null;
+        }
         return `${a.name}=${JSON.stringify(value)}`;
       })
       .filter(Boolean)

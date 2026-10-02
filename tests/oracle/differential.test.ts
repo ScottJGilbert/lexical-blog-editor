@@ -8,6 +8,7 @@ import { describe, expect, it } from "vitest";
 import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { renderToHtml } from "@blog/render";
+import { katexRenderExtension } from "@blog/render/katex";
 import { oracleHtml } from "../helpers/oracle";
 import { normalizeHtml } from "../helpers/normalize";
 
@@ -15,7 +16,9 @@ const dir = join(__dirname, "..", "fixtures");
 const names = readdirSync(dir).filter((f) => f.endsWith(".json")).map((f) => f.slice(0, -5));
 
 // Fixtures whose output intentionally differs from v1 (see docs/migration).
-const SKIP = new Set(["equation", "embeds"]);
+// embeds: v1 left Figma empty and used a different YouTube allowlist.
+// media: the renderer adds preload/playsinline/fallback links to <video>/<audio>.
+const SKIP = new Set(["embeds", "media"]);
 
 /**
  * Deliberate deviations from Lexical's raw exportDOM output:
@@ -48,7 +51,7 @@ describe("renderer vs Lexical exportDOM", () => {
     (SKIP.has(name) ? it.skip : it)(name, () => {
       const state = readFileSync(join(dir, `${name}.json`), "utf8");
       const expected = normalizeHtml(oracleHtml(state), IGNORE);
-      const actual = normalizeHtml(renderToHtml(state), IGNORE);
+      const actual = normalizeHtml(renderToHtml(state, { extensions: [katexRenderExtension] }), IGNORE);
       expect(actual).toBe(expected);
     });
   }

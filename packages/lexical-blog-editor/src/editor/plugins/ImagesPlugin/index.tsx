@@ -42,10 +42,8 @@ import {
   LexicalCommand,
   LexicalEditor,
 } from "lexical";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
-import landscapeImage from "../../images/landscape.jpg";
-import yellowFlowerImage from "../../images/yellow-flower.jpg";
 import {
   $createImageNode,
   $isImageNode,
@@ -56,6 +54,8 @@ import Button from "../../ui/Button";
 import { DialogActions, DialogButtonsList } from "../../ui/Dialog";
 import FileInput from "../../ui/FileInput";
 import TextInput from "../../ui/TextInput";
+import { useUploadManager } from "../../upload/context";
+import { UPLOAD_MEDIA_COMMAND } from "../MediaUploadPlugin";
 
 export type InsertImagePayload = Readonly<ImagePayload>;
 
@@ -102,34 +102,22 @@ export function InsertImageUriDialogBody({
 }
 
 export function InsertImageUploadedDialogBody({
-  onClick,
+  activeEditor,
+  onClose,
 }: {
-  onClick: (payload: InsertImagePayload) => void;
+  activeEditor: LexicalEditor;
+  onClose: () => void;
 }) {
-  const [src, setSrc] = useState("");
+  const manager = useUploadManager();
+  const [file, setFile] = useState<File | null>(null);
   const [altText, setAltText] = useState("");
-
-  const isDisabled = src === "";
-
-  const loadImage = (files: FileList | null) => {
-    const reader = new FileReader();
-    reader.onload = function () {
-      if (typeof reader.result === "string") {
-        setSrc(reader.result);
-      }
-      return "";
-    };
-    if (files !== null) {
-      reader.readAsDataURL(files[0]);
-    }
-  };
 
   return (
     <>
       <FileInput
         label="Image Upload"
-        onChange={loadImage}
-        accept="image/*"
+        onChange={(files) => setFile(files?.[0] ?? null)}
+        accept={manager?.acceptAttribute(["image"]) ?? "image/*"}
         data-test-id="image-modal-file-upload"
       />
       <TextInput
@@ -142,8 +130,16 @@ export function InsertImageUploadedDialogBody({
       <DialogActions>
         <Button
           data-test-id="image-modal-file-upload-btn"
-          disabled={isDisabled}
-          onClick={() => onClick({ altText, src })}
+          disabled={file === null}
+          onClick={() => {
+            if (!file) return;
+            // Goes through the upload pipeline: placeholder, progress, events.
+            activeEditor.dispatchCommand(UPLOAD_MEDIA_COMMAND, {
+              files: [file],
+              altText: altText || undefined,
+            });
+            onClose();
+          }}
         >
           Confirm
         </Button>
@@ -160,18 +156,6 @@ export function InsertImageDialog({
   onClose: () => void;
 }): JSX.Element {
   const [mode, setMode] = useState<null | "url" | "file">(null);
-  const hasModifier = useRef(false);
-
-  useEffect(() => {
-    hasModifier.current = false;
-    const handler = (e: KeyboardEvent) => {
-      hasModifier.current = e.altKey;
-    };
-    document.addEventListener("keydown", handler);
-    return () => {
-      document.removeEventListener("keydown", handler);
-    };
-  }, [activeEditor]);
 
   const onClick = (payload: InsertImagePayload) => {
     activeEditor.dispatchCommand(INSERT_IMAGE_COMMAND, payload);
@@ -182,25 +166,6 @@ export function InsertImageDialog({
     <>
       {!mode && (
         <DialogButtonsList>
-          <Button
-            data-test-id="image-modal-option-sample"
-            onClick={() =>
-              onClick(
-                hasModifier.current
-                  ? {
-                      altText:
-                        "Daylight fir trees forest glacier green high ice landscape",
-                      src: landscapeImage,
-                    }
-                  : {
-                      altText: "Yellow flower in tilt shift lens",
-                      src: yellowFlowerImage,
-                    },
-              )
-            }
-          >
-            Sample
-          </Button>
           <Button
             data-test-id="image-modal-option-url"
             onClick={() => setMode("url")}
@@ -216,7 +181,12 @@ export function InsertImageDialog({
         </DialogButtonsList>
       )}
       {mode === "url" && <InsertImageUriDialogBody onClick={onClick} />}
-      {mode === "file" && <InsertImageUploadedDialogBody onClick={onClick} />}
+      {mode === "file" && (
+        <InsertImageUploadedDialogBody
+          activeEditor={activeEditor}
+          onClose={onClose}
+        />
+      )}
     </>
   );
 }

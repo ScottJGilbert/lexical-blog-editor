@@ -11,6 +11,7 @@
 import katex from "katex";
 import { defineRenderExtension, h, raw } from "../core";
 import type { NodeRenderer, SerializedNode } from "../core";
+import { toBase64 } from "./builtins";
 
 const equation: NodeRenderer<SerializedNode & { equation?: unknown; inline?: unknown }> = (node) => {
   const source = typeof node.equation === "string" ? node.equation : "";
@@ -26,7 +27,7 @@ const equation: NodeRenderer<SerializedNode & { equation?: unknown; inline?: unk
   });
   return h(
     inline ? "span" : "div",
-    { "data-lexical-equation-source": source.slice(0, 2000), "data-lexical-inline": inline ? "true" : "false" },
+    { "data-lexical-equation": toBase64(source), "data-lexical-inline": inline ? "true" : "false" },
     [raw(html)],
   );
 };

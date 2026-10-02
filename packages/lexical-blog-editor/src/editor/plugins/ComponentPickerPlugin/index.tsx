@@ -39,6 +39,10 @@ import { useCallback, useMemo, useState } from "react";
 import * as ReactDOM from "react-dom";
 
 import useModal from "../../hooks/useModal";
+import { useEditorExtensions } from "../../extensions/context";
+import { useUploadManager } from "../../upload/context";
+import type { MediaKind } from "../../upload/types";
+import { InsertMediaDialog } from "../MediaPlugin";
 import { EmbedConfigs } from "../AutoEmbedPlugin";
 import { INSERT_COLLAPSIBLE_COMMAND } from "../CollapsiblePlugin";
 import { INSERT_DATETIME_COMMAND } from "../DateTimePlugin";
@@ -145,7 +149,22 @@ export function getDynamicOptions(editor: LexicalEditor, queryString: string) {
 
 export type ShowModal = ReturnType<typeof useModal>[1];
 
-export function getBaseOptions(editor: LexicalEditor, showModal: ShowModal) {
+const MEDIA_OPTIONS: Array<{
+  kind: Exclude<MediaKind, "image">;
+  title: string;
+  icon: string;
+  keywords: string[];
+}> = [
+  { kind: "video", title: "Video", icon: "icon video", keywords: ["video", "movie", "clip", "mp4"] },
+  { kind: "audio", title: "Audio", icon: "icon audio", keywords: ["audio", "music", "podcast", "mp3"] },
+  { kind: "file", title: "File", icon: "icon file", keywords: ["file", "attachment", "download", "pdf"] },
+];
+
+export function getBaseOptions(
+  editor: LexicalEditor,
+  showModal: ShowModal,
+  enabledKinds: ReadonlyArray<MediaKind> = ["image", "video", "audio", "file"],
+) {
   return [
     new ComponentPickerOption("Paragraph", {
       icon: <i className="icon paragraph" />,
@@ -290,14 +309,33 @@ export function getBaseOptions(editor: LexicalEditor, showModal: ShowModal) {
           <InsertEquationDialog activeEditor={editor} onClose={onClose} />
         )),
     }),
-    new ComponentPickerOption("Image", {
-      icon: <i className="icon image" />,
-      keywords: ["image", "photo", "picture", "file"],
-      onSelect: () =>
-        showModal("Insert Image", (onClose) => (
-          <InsertImageDialog activeEditor={editor} onClose={onClose} />
-        )),
-    }),
+    ...(enabledKinds.includes("image")
+      ? [
+          new ComponentPickerOption("Image", {
+            icon: <i className="icon image" />,
+            keywords: ["image", "photo", "picture"],
+            onSelect: () =>
+              showModal("Insert Image", (onClose) => (
+                <InsertImageDialog activeEditor={editor} onClose={onClose} />
+              )),
+          }),
+        ]
+      : []),
+    ...MEDIA_OPTIONS.filter((m) => enabledKinds.includes(m.kind)).map(
+      (m) =>
+        new ComponentPickerOption(m.title, {
+          icon: <i className={m.icon} />,
+          keywords: m.keywords,
+          onSelect: () =>
+            showModal(`Insert ${m.title}`, (onClose) => (
+              <InsertMediaDialog
+                kind={m.kind}
+                activeEditor={editor}
+                onClose={onClose}
+              />
+            )),
+        }),
+    ),
     new ComponentPickerOption("Collapsible", {
       icon: <i className="icon caret-right" />,
       keywords: ["collapse", "collapsible", "toggle"],
@@ -334,8 +372,23 @@ export default function ComponentPickerMenuPlugin(): JSX.Element {
     minLength: 0,
   });
 
+  const { slashMenu } = useEditorExtensions();
+  const manager = useUploadManager();
+  const enabledKinds = manager?.enabledKinds();
+
   const options = useMemo(() => {
-    const baseOptions = getBaseOptions(editor, showModal);
+    const baseOptions = [
+      ...getBaseOptions(editor, showModal, enabledKinds),
+      // Entries contributed by extensions (see `defineEditorExtension`).
+      ...slashMenu.map(
+        (item) =>
+          new ComponentPickerOption(item.title, {
+            icon: item.icon as JSX.Element | undefined,
+            keywords: item.keywords,
+            onSelect: (query) => item.onSelect({ editor, showModal }, query),
+          }),
+      ),
+    ];
 
     if (!queryString) {
       return baseOptions;
@@ -351,7 +404,7 @@ export default function ComponentPickerMenuPlugin(): JSX.Element {
           option.keywords.some((keyword) => regex.test(keyword)),
       ),
     ];
-  }, [editor, queryString, showModal]);
+  }, [editor, queryString, showModal, slashMenu, enabledKinds]);
 
   const onSelectOption = useCallback(
     (

@@ -16,6 +16,8 @@ export default defineConfig({
             "@blog/render": src("render/index.ts"),
             "@blog/react": src("react/index.tsx"),
             "@blog/html": src("html/index.ts"),
+            "@blog/editor-upload": src("editor/upload/index.ts"),
+            "@blog/editor-extensions": src("editor/extensions/index.ts"),
           },
         },
         test: {
@@ -49,6 +51,7 @@ export default defineConfig({
         resolve: {
           alias: {
             "@blog/core": src("core/index.ts"),
+            "@blog/render/katex": src("render/katex.ts"),
             "@blog/render": src("render/index.ts"),
             "@blog/editor": src("editor"),
           },
