@@ -1,0 +1,12 @@
+{
+  "name": "e2e-edge-function",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "dependencies": {
+    "@scottjgilbert/lexical-blog-editor": "workspace:*",
+    "@scottjgilbert/lexical-blog-editor-ext-callout": "workspace:*",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  }
+}

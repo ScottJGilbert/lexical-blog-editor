@@ -99,6 +99,39 @@ importers:
         specifier: ^3.2.7
         version: 3.2.7(@edge-runtime/vm@5.0.0)(@types/node@20.19.32)(happy-dom@20.5.0)(jiti@2.6.1)(jsdom@26.1.0)(lightningcss@1.30.2)
 
+  e2e/apps/edge-function:
+    dependencies:
+      '@scottjgilbert/lexical-blog-editor':
+        specifier: workspace:*
+        version: link:../../../packages/lexical-blog-editor
+      '@scottjgilbert/lexical-blog-editor-ext-callout':
+        specifier: workspace:*
+        version: link:../../../packages/ext-callout
+      react:
+        specifier: ^19.0.0
+        version: 19.2.4
+      react-dom:
+        specifier: ^19.0.0
+        version: 19.2.4(react@19.2.4)
+
+  e2e/apps/express-server:
+    dependencies:
+      '@scottjgilbert/lexical-blog-editor':
+        specifier: workspace:*
+        version: link:../../../packages/lexical-blog-editor
+      '@scottjgilbert/lexical-blog-editor-ext-callout':
+        specifier: workspace:*
+        version: link:../../../packages/ext-callout
+      express:
+        specifier: ^5.2.1
+        version: 5.2.1
+      react:
+        specifier: ^19.0.0
+        version: 19.2.4
+      react-dom:
+        specifier: ^19.0.0
+        version: 19.2.4(react@19.2.4)
+
   e2e/apps/vite-spa:
     dependencies:
       '@lexical/react':

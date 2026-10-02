@@ -1,4 +1,22 @@
 import { defineConfig } from "tsup";
+import { createRequire } from "node:module";
+
+const require = createRequire(import.meta.url);
+
+/**
+ * Third-party stylesheets (react-day-picker, KaTeX) must end up inside
+ * dist/editor/index.css, not as `import "pkg/style.css"` statements in the JS:
+ * plain Node (SSR) cannot import .css files.
+ */
+const bundlePackageCss = {
+  name: "bundle-package-css",
+  setup(build: any) {
+    build.onResolve({ filter: /^[^./].*\.css$/ }, (args: any) => {
+      if (args.kind === "url-token") return undefined;
+      return { path: require.resolve(args.path, { paths: [args.resolveDir] }) };
+    });
+  },
+};
 
 const shared = {
   format: ["esm", "cjs"] as const,
@@ -50,7 +68,15 @@ export default defineConfig([
     // rollup's tree-shaking pass would drop the "use client" banner.
     treeshake: false,
     banner: { js: '"use client";' },
+    skipNodeModulesBundle: false,
+    // Everything in dependencies/peerDependencies stays external (tsup default),
+    // except package stylesheets, which are folded into dist/editor/index.css.
+    noExternal: [/\.css$/],
+    esbuildPlugins: [bundlePackageCss],
     loader: {
+      ".woff": "file",
+      ".woff2": "file",
+      ".ttf": "file",
       ".svg": "dataurl",
       ".png": "dataurl",
       ".gif": "dataurl",

@@ -63,6 +63,17 @@ export default defineConfig({
           testTimeout: 30000,
         },
       },
+      {
+        // Real Node resolution, real HTTP, edge VM: see tests/node.
+        extends: false,
+        test: {
+          name: "node-native",
+          environment: "node",
+          include: ["tests/node/**/*.test.ts"],
+          testTimeout: 60_000,
+          hookTimeout: 90_000,
+        },
+      },
       // The same cross-environment suite against the *built* package.
       ...(["node", "jsdom", "edge-runtime"] as const).map((environment) => ({
         extends: false as const,

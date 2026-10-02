@@ -1,0 +1,12 @@
+{
+  "name": "e2e-express-server",
+  "private": true,
+  "version": "0.0.0",
+  "dependencies": {
+    "@scottjgilbert/lexical-blog-editor": "workspace:*",
+    "@scottjgilbert/lexical-blog-editor-ext-callout": "workspace:*",
+    "express": "^5.2.1",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  }
+}
