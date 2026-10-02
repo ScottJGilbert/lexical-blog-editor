@@ -13,7 +13,7 @@ async function normalizedInPage(page: Page, html: string): Promise<string> {
   return page.evaluate((markup) => {
     const doc = new DOMParser().parseFromString(`<body>${markup}</body>`, "text/html");
     // React needs a host element to inject raw (KaTeX) markup; unwrap it for comparison.
-    doc.querySelectorAll('span[style="display: contents"]').forEach((el) => el.replaceWith(...Array.from(el.childNodes)));
+    doc.querySelectorAll('span[style*="display:contents"], span[style*="display: contents"]').forEach((el) => el.replaceWith(...Array.from(el.childNodes)));
     const walk = (node: Node): string => {
       if (node.nodeType === 3) return node.textContent ?? "";
       if (node.nodeType !== 1) return "";
