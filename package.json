@@ -30,6 +30,7 @@
     "@lexical/table": "^0.40.0",
     "@lexical/utils": "^0.40.0",
     "@playwright/test": "^1.63.0",
+    "@scottjgilbert/lexical-blog-editor": "workspace:*",
     "@types/express": "^5.0.6",
     "@types/node": "^20",
     "@types/react": "^19",

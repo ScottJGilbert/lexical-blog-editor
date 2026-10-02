@@ -31,12 +31,12 @@
     },
     "./render/katex": {
       "import": {
-        "types": "./dist/render/katex/index.d.ts",
-        "default": "./dist/render/katex/index.js"
+        "types": "./dist/render/katex.d.ts",
+        "default": "./dist/render/katex.js"
       },
       "require": {
-        "types": "./dist/render/katex/index.d.cts",
-        "default": "./dist/render/katex/index.cjs"
+        "types": "./dist/render/katex.d.cts",
+        "default": "./dist/render/katex.cjs"
       }
     },
     "./react": {
@@ -80,7 +80,7 @@
     "LICENSE"
   ],
   "scripts": {
-    "build": "tsup && node scripts/copy-assets.mjs",
+    "build": "node scripts/clean.mjs && tsup && node scripts/copy-assets.mjs",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "prepublishOnly": "pnpm run build"
   },
@@ -157,5 +157,6 @@
     "react-dom": {
       "optional": true
     }
-  }
+  },
+  "type": "module"
 }

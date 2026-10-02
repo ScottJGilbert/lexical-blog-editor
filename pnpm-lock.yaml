@@ -53,6 +53,9 @@ importers:
       '@playwright/test':
         specifier: ^1.63.0
         version: 1.63.0
+      '@scottjgilbert/lexical-blog-editor':
+        specifier: workspace:*
+        version: link:packages/lexical-blog-editor
       '@types/express':
         specifier: ^5.0.6
         version: 5.0.6

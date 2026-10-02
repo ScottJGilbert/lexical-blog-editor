@@ -353,7 +353,7 @@ const tablerow: NodeRenderer<Loose> = (node, ctx) =>
 
 const tablecell: NodeRenderer<Loose> = (node, ctx) => {
   const isHeader = typeof node.headerState === "number" && node.headerState !== 0;
-  const bg = str(node.backgroundColor) || null;
+  const bg: string | null = str(node.backgroundColor) || null;
   return h(
     isHeader ? "th" : "td",
     {
@@ -361,7 +361,7 @@ const tablecell: NodeRenderer<Loose> = (node, ctx) => {
       rowspan: Number(node.rowSpan) > 1 ? Number(node.rowSpan) : undefined,
       class: classes(ctx.theme.tableCell, isHeader && ctx.theme.tableCellHeader),
       style: joinStyle(
-        bg && `background-color: ${bg}`,
+        bg !== null && `background-color: ${bg}`,
         "border: 1px solid black",
         `width: ${posNum(node.width) ?? 75}px`,
         `vertical-align: ${str(node.verticalAlign) || "top"}`,
