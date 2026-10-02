@@ -60,7 +60,7 @@ export class UploadPlaceholderNode extends DecoratorNode<JSX.Element> {
 
   createDOM(_config: EditorConfig): HTMLElement {
     const span = document.createElement("span");
-    span.className = "LexicalBlogEditor__uploadPlaceholder";
+    span.className = "LexicalBlogEditor__uploadSlot";
     return span;
   }
 

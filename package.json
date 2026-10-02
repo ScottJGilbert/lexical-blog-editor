@@ -29,7 +29,7 @@
     "@lexical/rich-text": "^0.40.0",
     "@lexical/table": "^0.40.0",
     "@lexical/utils": "^0.40.0",
-    "@playwright/test": "^1.63.0",
+    "@playwright/test": "^1.56.1",
     "@scottjgilbert/lexical-blog-editor": "workspace:*",
     "@scottjgilbert/lexical-blog-editor-ext-callout": "workspace:*",
     "@types/express": "^5.0.6",

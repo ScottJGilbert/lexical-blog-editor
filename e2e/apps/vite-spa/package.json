@@ -1,0 +1,26 @@
+{
+  "name": "e2e-vite-spa",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "vite build",
+    "preview": "vite preview --port 4173 --strictPort"
+  },
+  "dependencies": {
+    "@scottjgilbert/lexical-blog-editor": "workspace:*",
+    "@scottjgilbert/lexical-blog-editor-ext-callout": "workspace:*",
+    "@lexical/react": "^0.40.0",
+    "@lexical/utils": "^0.40.0",
+    "katex": "^0.16.28",
+    "lexical": "^0.40.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "vite": "^7.0.0",
+    "typescript": "^5.9.3",
+    "@types/react": "^19.2.13",
+    "@types/react-dom": "^19.2.3"
+  }
+}
