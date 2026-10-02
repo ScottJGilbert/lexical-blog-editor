@@ -1,0 +1,161 @@
+{
+  "name": "@scottjgilbert/lexical-blog-editor",
+  "version": "2.0.0-alpha.0",
+  "description": "A full suite of rich-text tools built on Lexical: React editor, React/HTML viewers and a DOM-free headless renderer, with a first-class extension API.",
+  "main": "./dist/core/index.cjs",
+  "types": "./dist/core/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ScottJGilbert/lexical-blog-editor.git"
+  },
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/core/index.d.ts",
+        "default": "./dist/core/index.js"
+      },
+      "require": {
+        "types": "./dist/core/index.d.cts",
+        "default": "./dist/core/index.cjs"
+      }
+    },
+    "./render": {
+      "import": {
+        "types": "./dist/render/index.d.ts",
+        "default": "./dist/render/index.js"
+      },
+      "require": {
+        "types": "./dist/render/index.d.cts",
+        "default": "./dist/render/index.cjs"
+      }
+    },
+    "./render/katex": {
+      "import": {
+        "types": "./dist/render/katex/index.d.ts",
+        "default": "./dist/render/katex/index.js"
+      },
+      "require": {
+        "types": "./dist/render/katex/index.d.cts",
+        "default": "./dist/render/katex/index.cjs"
+      }
+    },
+    "./react": {
+      "import": {
+        "types": "./dist/react/index.d.ts",
+        "default": "./dist/react/index.js"
+      },
+      "require": {
+        "types": "./dist/react/index.d.cts",
+        "default": "./dist/react/index.cjs"
+      }
+    },
+    "./html": {
+      "import": {
+        "types": "./dist/html/index.d.ts",
+        "default": "./dist/html/index.js"
+      },
+      "require": {
+        "types": "./dist/html/index.d.cts",
+        "default": "./dist/html/index.cjs"
+      }
+    },
+    "./editor": {
+      "import": {
+        "types": "./dist/editor/index.d.ts",
+        "default": "./dist/editor/index.js"
+      },
+      "require": {
+        "types": "./dist/editor/index.d.cts",
+        "default": "./dist/editor/index.cjs"
+      }
+    },
+    "./editor/styles.css": "./dist/editor/index.css",
+    "./styles/ViewerTheme.css": "./dist/styles/ViewerTheme.css",
+    "./styles/ViewerThemeComplete.css": "./dist/styles/ViewerThemeComplete.css",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsup && node scripts/copy-assets.mjs",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "prepublishOnly": "pnpm run build"
+  },
+  "keywords": [
+    "lexical",
+    "editor",
+    "react",
+    "blog",
+    "rich-text",
+    "renderer",
+    "ssr",
+    "sanitize"
+  ],
+  "author": "Scott Gilbert",
+  "license": "MIT",
+  "peerDependencies": {
+    "lexical": "^0.40.0",
+    "react": "^18.0.0 || ^19.0.0",
+    "react-dom": "^18.0.0 || ^19.0.0"
+  },
+  "dependencies": {
+    "@floating-ui/react": "^0.27.17",
+    "@lexical/clipboard": "^0.40.0",
+    "@lexical/code": "^0.40.0",
+    "@lexical/code-shiki": "^0.40.0",
+    "@lexical/extension": "^0.40.0",
+    "@lexical/file": "^0.40.0",
+    "@lexical/hashtag": "^0.40.0",
+    "@lexical/html": "^0.40.0",
+    "@lexical/link": "^0.40.0",
+    "@lexical/list": "^0.40.0",
+    "@lexical/mark": "^0.40.0",
+    "@lexical/markdown": "^0.40.0",
+    "@lexical/overflow": "^0.40.0",
+    "@lexical/react": "^0.40.0",
+    "@lexical/rich-text": "^0.40.0",
+    "@lexical/selection": "^0.40.0",
+    "@lexical/table": "^0.40.0",
+    "@lexical/utils": "^0.40.0",
+    "@lexical/yjs": "^0.40.0",
+    "@shikijs/core": "^3.22.0",
+    "@shikijs/engine-javascript": "^3.22.0",
+    "@shikijs/types": "^3.22.0",
+    "date-fns": "^4.1.0",
+    "katex": "^0.16.28",
+    "lodash-es": "^4.17.23",
+    "prettier": "^3.8.1",
+    "react-day-picker": "^9.13.0",
+    "react-error-boundary": "^6.1.0",
+    "shiki": "^3.22.0",
+    "y-websocket": "^3.0.0",
+    "yjs": "^13.6.29"
+  },
+  "devDependencies": {
+    "@lexical/headless": "^0.40",
+    "@types/lodash-es": "^4.17.12",
+    "@types/node": "^20.19.32",
+    "@types/react": "^19.2.13",
+    "@types/react-dom": "^19.2.3",
+    "typescript": "^5.9.3"
+  },
+  "packageManager": "pnpm@10.28.0+sha512.05df71d1421f21399e053fde567cea34d446fa02c76571441bfc1c7956e98e363088982d940465fd34480d4d90a0668bc12362f8aa88000a64e83d0b0e47be48",
+  "module": "./dist/core/index.js",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "peerDependenciesMeta": {
+    "lexical": {
+      "optional": true
+    },
+    "react": {
+      "optional": true
+    },
+    "react-dom": {
+      "optional": true
+    }
+  }
+}

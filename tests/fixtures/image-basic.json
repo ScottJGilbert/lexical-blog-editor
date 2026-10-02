@@ -1,0 +1,44 @@
+{
+  "root": {
+    "children": [
+      {
+        "children": [
+          {
+            "type": "image",
+            "version": 1,
+            "altText": "A \"cat\" & <dog>",
+            "caption": {
+              "editorState": {
+                "root": {
+                  "children": [],
+                  "direction": null,
+                  "format": "",
+                  "indent": 0,
+                  "type": "root",
+                  "version": 1
+                }
+              }
+            },
+            "height": 200,
+            "maxWidth": 500,
+            "showCaption": false,
+            "src": "https://example.com/cat.png",
+            "width": 300
+          }
+        ],
+        "direction": null,
+        "format": "",
+        "indent": 0,
+        "type": "paragraph",
+        "version": 1,
+        "textFormat": 0,
+        "textStyle": ""
+      }
+    ],
+    "direction": null,
+    "format": "",
+    "indent": 0,
+    "type": "root",
+    "version": 1
+  }
+}

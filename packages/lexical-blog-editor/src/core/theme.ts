@@ -1,19 +1,10 @@
+import type { RenderTheme } from "./types";
+
 /**
- * Copyright (c) Meta Platforms, Inc. and affiliates.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- *
+ * Default class names. They match `styles/ViewerTheme.css`, so output styled
+ * by the v1 viewer stylesheet keeps working.
  */
-
-import type { EditorThemeClasses } from "lexical";
-
-import "./ViewerTheme.css";
-
-const theme: EditorThemeClasses = {
-  autocomplete: "ViewerTheme__autocomplete",
-  blockCursor: "ViewerTheme__blockCursor",
-  characterLimit: "ViewerTheme__characterLimit",
+export const defaultRenderTheme: RenderTheme = {
   code: "ViewerTheme__code",
   codeHighlight: {
     atrule: "ViewerTheme__tokenAttr",
@@ -48,10 +39,8 @@ const theme: EditorThemeClasses = {
     url: "ViewerTheme__tokenOperator",
     variable: "ViewerTheme__tokenVariable",
   },
-  embedBlock: {
-    base: "ViewerTheme__embedBlock",
-    focus: "ViewerTheme__embedBlockFocus",
-  },
+  embedBlock: { base: "ViewerTheme__embedBlock" },
+  file: "ViewerTheme__file",
   hashtag: "ViewerTheme__hashtag",
   heading: {
     h1: "ViewerTheme__h1",
@@ -62,7 +51,6 @@ const theme: EditorThemeClasses = {
     h6: "ViewerTheme__h6",
   },
   hr: "ViewerTheme__hr",
-  hrSelected: "ViewerTheme__hrSelected",
   image: "editor-image",
   indent: "ViewerTheme__indent",
   layoutContainer: "ViewerTheme__layoutContainer",
@@ -73,9 +61,7 @@ const theme: EditorThemeClasses = {
     listitem: "ViewerTheme__listItem",
     listitemChecked: "ViewerTheme__listItemChecked",
     listitemUnchecked: "ViewerTheme__listItemUnchecked",
-    nested: {
-      listitem: "ViewerTheme__nestedListItem",
-    },
+    nested: { listitem: "ViewerTheme__nestedListItem" },
     olDepth: [
       "ViewerTheme__ol1",
       "ViewerTheme__ol2",
@@ -86,30 +72,18 @@ const theme: EditorThemeClasses = {
     ul: "ViewerTheme__ul",
   },
   mark: "ViewerTheme__mark",
-  markOverlap: "ViewerTheme__markOverlap",
   paragraph: "ViewerTheme__paragraph",
   quote: "ViewerTheme__quote",
   specialText: "ViewerTheme__specialText",
   tab: "ViewerTheme__tabNode",
   table: "ViewerTheme__table",
-  tableAddColumns: "ViewerTheme__tableAddColumns",
-  tableAddRows: "ViewerTheme__tableAddRows",
   tableAlignment: {
     center: "ViewerTheme__tableAlignmentCenter",
     right: "ViewerTheme__tableAlignmentRight",
   },
   tableCell: "ViewerTheme__tableCell",
-  tableCellActionButton: "ViewerTheme__tableCellActionButton",
-  tableCellActionButtonContainer: "ViewerTheme__tableCellActionButtonContainer",
   tableCellHeader: "ViewerTheme__tableCellHeader",
-  tableCellResizer: "ViewerTheme__tableCellResizer",
-  tableCellSelected: "ViewerTheme__tableCellSelected",
-  tableFrozenColumn: "ViewerTheme__tableFrozenColumn",
-  tableFrozenRow: "ViewerTheme__tableFrozenRow",
-  tableRowStriping: "ViewerTheme__tableRowStriping",
   tableScrollableWrapper: "ViewerTheme__tableScrollableWrapper",
-  tableSelected: "ViewerTheme__tableSelected",
-  tableSelection: "ViewerTheme__tableSelection",
   text: {
     bold: "ViewerTheme__textBold",
     capitalize: "ViewerTheme__textCapitalize",
@@ -126,4 +100,25 @@ const theme: EditorThemeClasses = {
   },
 };
 
-export default theme;
+/** Deep-merge plain objects; arrays and primitives from `b` replace `a`. */
+export function mergeTheme(a: RenderTheme, b?: RenderTheme): RenderTheme {
+  if (!b) return a;
+  const out: Record<string, unknown> = { ...a };
+  for (const key of Object.keys(b)) {
+    const next = (b as Record<string, unknown>)[key];
+    const prev = out[key];
+    if (
+      next &&
+      typeof next === "object" &&
+      !Array.isArray(next) &&
+      prev &&
+      typeof prev === "object" &&
+      !Array.isArray(prev)
+    ) {
+      out[key] = mergeTheme(prev as RenderTheme, next as RenderTheme);
+    } else if (next !== undefined) {
+      out[key] = next;
+    }
+  }
+  return out as RenderTheme;
+}

@@ -1,0 +1,29 @@
+{
+  "root": {
+    "children": [
+      {
+        "type": "youtube",
+        "version": 1,
+        "format": "",
+        "videoID": "dQw4w9WgXcQ"
+      },
+      {
+        "type": "tweet",
+        "version": 1,
+        "format": "",
+        "id": "1234567890"
+      },
+      {
+        "type": "figma",
+        "version": 1,
+        "format": "",
+        "documentID": "abc123"
+      }
+    ],
+    "direction": null,
+    "format": "",
+    "indent": 0,
+    "type": "root",
+    "version": 1
+  }
+}
