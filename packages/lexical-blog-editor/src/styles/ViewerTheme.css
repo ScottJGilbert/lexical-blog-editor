@@ -343,7 +343,7 @@
   cursor: pointer;
 }
 .ViewerTheme__tableAddColumns:after {
-  background-image: url(../images/icons/plus.svg);
+  background-image: url(./images/plus.svg);
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
@@ -369,7 +369,7 @@
   cursor: pointer;
 }
 .ViewerTheme__tableAddRows:after {
-  background-image: url(../images/icons/plus.svg);
+  background-image: url(./images/plus.svg);
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;

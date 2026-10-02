@@ -20,3 +20,21 @@ describe("package.json exports", () => {
     });
   }
 });
+
+describe("shipped stylesheets", () => {
+  // Regression: dist/styles/*.css once pointed at ../images/icons/plus.svg, which
+  // only existed in the source tree, so consumers' bundlers failed to build.
+  for (const file of ["styles/ViewerTheme.css", "styles/ViewerThemeComplete.css", "editor/index.css"]) {
+    it(`${file}: every relative url() resolves inside dist`, () => {
+      const path = join(pkgDir, "dist", file);
+      expect(existsSync(path), `${file} missing (run pnpm build)`).toBe(true);
+      const css = readFileSync(path, "utf8");
+      const urls = [...css.matchAll(/url\(\s*["']?([^"')]+)["']?\s*\)/g)].map((m) => m[1]);
+      for (const url of urls) {
+        if (/^(data:|https?:|#|\/\/)/.test(url)) continue;
+        const target = join(pkgDir, "dist", file, "..", url.split(/[?#]/)[0]);
+        expect(existsSync(target), `${file} -> ${url}`).toBe(true);
+      }
+    });
+  }
+});
