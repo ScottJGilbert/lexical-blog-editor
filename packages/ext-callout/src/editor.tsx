@@ -1,4 +1,3 @@
-"use client";
 
 /**
  * Editor half: node, plugin and menu entries. Only import this in client code.

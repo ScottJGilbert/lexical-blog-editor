@@ -5,264 +5,391 @@
 <img alt="License" src="https://img.shields.io/npm/l/@scottjgilbert/lexical-blog-editor.svg?style=for-the-badge&labelColor=000000">
 </p>
 
-# Lexical Blog Editor Documentation
+A full suite of rich-text tools built on [Lexical](https://lexical.dev/): a React **editor**, a React **viewer**, a
+framework-free **HTML viewer** and a DOM-free **headless renderer** for servers and edge runtimes, all driven by the same
+saved JSON, all sanitized by default, all extensible.
 
-A feature-rich, production-ready rich text editor designed for blog content management. Built on Meta's [Lexical](https://lexical.dev/) framework.
+> **v2** is a restructure into independently importable pieces. Coming from v1? See [Migrating from v1](#migrating-from-v1).
 
-## Overview
+## Pick the pieces you need
 
-A feature-rich, production-ready rich text editor and viewer for blog content, built on Meta's [Lexical](https://lexical.dev/) framework. This package provides a comprehensive editing experience with extensive plugin support, custom nodes, and a full-featured toolbar.
+Every component lives behind its own import path, so a server never loads the editor and a blog page never loads Lexical.
 
-This editor is designed to be plug-and-play and is not customizable or designed for extensive configuration. It is intended to be used as a complete solution for blog content creation, with a focus on providing a wide range of features out of the box.
+| Import path | What it is | Runs in | Needs |
+| --- | --- | --- | --- |
+| `@scottjgilbert/lexical-blog-editor/editor` | React editor, upload API, editor-extension API | browser (SSR-safe wrapper) | `react`, `react-dom`, `lexical` |
+| `…/editor/styles.css` | Editor stylesheet | browser | – |
+| `…/react` | `<Viewer>`: saved JSON → React elements | server, RSC, edge, browser | `react` |
+| `…/html` | `mountViewer()`, `<lexical-blog-viewer>`: saved JSON → HTML | browser (import-safe anywhere) | – |
+| `…/render` | `renderToHtml()`: saved JSON → HTML string | **Node, Express, serverless, edge, browser** | – |
+| `…/render/katex` | Optional KaTeX typesetting for equations | same as `/render` | `katex` |
+| `…` (root) | Types, sanitizer, render-extension API (no runtime deps) | everywhere | – |
+| `…/styles/ViewerTheme.css`, `…/styles/ViewerThemeComplete.css` | Viewer styles | browser | – |
+
+`/render`, `/react`, `/html` and the root import **never** pull in Lexical, a DOM implementation, DOMPurify or the editor.
+This is enforced by a boundary check and bundle-size tests in CI.
 
 ## Installation
 
 ```bash
 npm install @scottjgilbert/lexical-blog-editor
-# or
-pnpm add @scottjgilbert/lexical-blog-editor
-# or
-yarn add @scottjgilbert/lexical-blog-editor
 ```
 
-## Requirements
+Only install the peers for the pieces you use:
 
-This package requires the following peer dependencies:
+| You use | Install |
+| --- | --- |
+| `/render`, `/html`, root | nothing else |
+| `/react` | `react` (18 or 19) |
+| `/editor` | `react`, `react-dom`, `lexical@^0.40` |
 
-- Lexical 0.40.0 or higher
-- React 18.0.0 or 19.0.0
-- React DOM 18.0.0 or 19.0.0
+Everything ships as dual ESM + CommonJS with types.
 
-## Supported Browsers
+## Quick start
 
-| Browser | Version |
-| ------- | ------- |
-| Chrome  | 49+     |
-| Firefox | 52+     |
-| Safari  | 11+     |
-| Edge    | 79+     |
-
-## Usage
-
-### Basic Implementation
+### 1. Edit
 
 ```tsx
-import { useState } from "react";
-import { Editor } from "@scottjgilbert/lexical-blog-editor";
-import { Viewer } from "@scottjgilbert/lexical-blog-editor/viewer";
-import type { EditorState } from "@scottjgilbert/lexical-blog-editor";
+import { Editor } from "@scottjgilbert/lexical-blog-editor/editor";
+import "@scottjgilbert/lexical-blog-editor/editor/styles.css";
 
-import "@scottjgilbert/lexical-blog-editor/styles/ViewerTheme.css";
-
-function MyBlogEditor() {
-  const [savedState, setSavedState] = useState<string | null>(null);
-
-  const handleChange = (editorState: EditorState) => {
-    const json = JSON.stringify(editorState.toJSON());
-    setSavedState(json);
-  };
-
-  return (
-    <>
-      <Editor
-        onChange={handleChange}
-        placeholder="Start writing your blog post..."
-      />
-      {savedState && <Viewer state={savedState} />}
-    </>
-  );
-}
-```
-
-### With Initial Content
-
-```tsx
-import { Editor } from "@scottjgilbert/lexical-blog-editor";
-import type { EditorState } from "@scottjgilbert/lexical-blog-editor";
-
-function MyBlogEditor({ savedContent }: { savedContent?: EditorState }) {
-  const handleChange = (editorState: EditorState, html: string) => {
-    // Handle changes
-  };
-
+export function Composer({ onSave }: { onSave: (json: string) => void }) {
   return (
     <Editor
-      initialState={savedContent}
-      onChange={handleChange}
-      placeholder="Continue writing..."
+      placeholder="Start writing…"
+      onChange={(state) => onSave(JSON.stringify(state.toJSON()))}
     />
   );
 }
 ```
 
-## API Reference
+`initialState` accepts a saved JSON string or an `EditorState`.
 
-### Editor Component
-
-#### Props
-
-| Prop           | Type                                               | Default                | Description                                                                       |
-| -------------- | -------------------------------------------------- | ---------------------- | --------------------------------------------------------------------------------- |
-| `onChange`     | `(editorState: EditorState, html: string) => void` | **Required**           | Callback fired whenever the editor content changes                                |
-| `placeholder`  | `string`                                           | `"Enter some text..."` | Placeholder text displayed when the editor is empty                               |
-| `initialState` | `EditorState`                                      | `undefined`            | Initial editor content state. If not provided, displays a default welcome message |
-
-### Viewer Component
-
-Import from:
+### 2. View it in React (works as a Server Component)
 
 ```tsx
-import { Viewer } from "@scottjgilbert/lexical-blog-editor/viewer";
+import { Viewer } from "@scottjgilbert/lexical-blog-editor/react";
+import "@scottjgilbert/lexical-blog-editor/styles/ViewerTheme.css";
+
+export default function Post({ json }: { json: string }) {
+  return <Viewer state={json} />;
+}
 ```
 
-#### Props
+`<Viewer>` uses no hooks and no browser APIs: render it in a React Server Component and it ships **zero** client JS.
 
-| Prop       | Type                    | Default      | Description                                                                                               |
-| ---------- | ----------------------- | ------------ | --------------------------------------------------------------------------------------------------------- |
-| `state`    | `EditorState \| string` | **Required** | Serialized editor state string (from `JSON.stringify(editorState.toJSON())`) or an `EditorState` instance |
-| `sanitize` | `boolean`               | `true`       | Sanitizes generated HTML with DOMPurify and an iframe allowlist for YouTube, Figma, and Twitter embeds    |
+### 3. View it without React
 
-## Features
+```ts
+import { mountViewer } from "@scottjgilbert/lexical-blog-editor/html";
 
-### Rich Text Editing
+const viewer = mountViewer(document.querySelector("#post")!, json);
+viewer.update(newJson); // re-render
+```
 
-- **Text Formatting**: Bold, italic, underline, strikethrough, subscript, superscript, code
-- **Headings**: H1 through H6
-- **Text Alignment**: Left, center, right, justify
-- **Font Sizes**: Adjustable text size
-- **Text Color & Background**: Custom text and highlight colors
-- **Lists**: Ordered lists, unordered lists, and checklist support
-- **Quotes & Code Blocks**: Block quotes and syntax-highlighted code blocks
-- **Indentation**: Tab indentation with nesting support (up to 7 levels)
+Or as a custom element:
 
-### Content Blocks
+```ts
+import { defineViewerElement } from "@scottjgilbert/lexical-blog-editor/html";
+defineViewerElement(); // <lexical-blog-viewer state='{"root":…}'></lexical-blog-viewer>
+```
 
-- **Tables**: Fully-featured tables with cell merging, resizing, and hover actions
-- **Images**: Upload and embed images with captions and resizing
-- **Embeds**: YouTube videos, Twitter/X posts, Figma designs
-- **Equations**: LaTeX/KaTeX mathematical equation support
-- **Horizontal Rules**: Visual section dividers
-- **Layouts**: Multi-column layouts with customizable containers
-- **Collapsible Sections**: Expandable/collapsible content blocks
-- **Date/Time**: Insert formatted date and time stamps
+### 4. Render on a server (Express, serverless, edge)
 
-### Interactive Elements
+```ts
+import express from "express";
+import { renderToHtml } from "@scottjgilbert/lexical-blog-editor/render";
 
-- **Links**: Auto-detection, manual insertion, and inline editing
-- **Hashtags**: Automatic #hashtag detection
-- **Keywords**: Special keyword highlighting
-- **Emojis**: Emoji picker with search and categories
+const app = express();
+app.get("/posts/:id", async (req, res) => {
+  const json = await db.posts.getJson(req.params.id);
+  res.send(`<article>${renderToHtml(json)}</article>`);
+});
+```
 
-### Advanced Features
+The same call works unchanged in Next.js route handlers, Cloudflare Workers, Vercel Edge, Deno Deploy and the browser:
+no `window`, no `document`, no jsdom, no Node built-ins.
 
-- **Markdown Shortcuts**: Type Markdown syntax for quick formatting
-- **Drag & Drop**: Drag and drop images, reorder blocks
-- **Speech to Text**: Voice input support (browser-dependent)
-- **Component Picker**: Slash commands (`/`) to quickly insert components
-- **Floating Toolbars**: Context-aware formatting toolbars
-- **Auto-linking**: Automatically converts URLs to clickable links
-- **Syntax Highlighting**: Code blocks with Shiki-powered syntax highlighting for almost 200 languages
-- **Undo/Redo**: Full history support with keyboard shortcuts
-- **Keyboard Shortcuts**: Comprehensive keyboard shortcut system
-- **Copy/Paste**: Smart paste handling with format preservation
-- **Viewer**: Read-only rendering component with sanitization and embed handling
+```ts
+// Web-standard handler (Workers / Edge / Deno)
+export default {
+  async fetch(request: Request) {
+    const { state } = await request.json();
+    return new Response(renderToHtml(state), { headers: { "content-type": "text/html" } });
+  },
+};
+```
 
-### Included Plugins/Extensions
+> **Same input, same output, everywhere.** The saved JSON renders to byte-identical HTML in Node, jsdom, the edge
+> runtime and the browser, and the React and HTML viewers build the same DOM. A shared fixture corpus asserts this in CI
+> (see [Testing](#testing)).
 
-<details>
-<summary>View all (30+)</summary>
+## Renderer options
 
-- ActionsPlugin
-- AutoEmbedPlugin
-- AutoFocusPlugin
-- AutoLinkPlugin
-- CheckListPlugin
-- ClearEditorPlugin
-- ClickableLinkPlugin
-- CodeActionMenuPlugin
-- CollapsiblePlugin
-- ComponentPickerPlugin
-- DateTimePlugin
-- DragDropPastePlugin
-- DraggableBlockPlugin
-- EmojiPickerPlugin
-- EmojisPlugin
-- EquationsPlugin
-- FigmaPlugin
-- FloatingLinkEditorPlugin
-- FloatingTextFormatToolbarPlugin
-- HashtagPlugin
-- HistoryPlugin
-- HorizontalRulePlugin
-- ImagesPlugin
-- KeywordsPlugin
-- LayoutPlugin
-- LinkPlugin
-- ListPlugin
-- MarkdownShortcutPlugin
-- RichTextPlugin
-- ShortcutsPlugin
-- SpeechToTextPlugin
-- TabFocusPlugin
-- TabIndentationPlugin
-- TablePlugin (with cell resizing, merging, and hover actions)
-- ToolbarPlugin
-- TwitterPlugin
-- YouTubePlugin
+Every renderer (`renderToHtml`, `renderToTree`, `createRenderer`, `<Viewer>`, `mountViewer`) takes the same options:
 
-</details>
+| Option | Type | Default | Description |
+| --- | --- | --- | --- |
+| `sanitize` | `boolean` | `true` | Strip anything unsafe. Disable only for content you fully trust. |
+| `sanitizePolicy` | `SanitizePolicy` | – | Extend the allowlists: tags, attributes, URL schemes, iframe hosts, CSS properties. |
+| `theme` | `RenderTheme` | viewer theme | Class names, deep-merged over the defaults (matches `ViewerTheme.css`). |
+| `extensions` | `RenderExtension[]` | `[]` | Custom node renderers, theme and policy additions. See [Extensions](#extensions). |
+| `limits` | `{ maxDepth?, maxNodes? }` | `256` / `200 000` | Protection against hostile input. Exceeding throws `RenderLimitError`. |
+| `onWarning` | `(message, node?) => void` | no-op | Called for unknown nodes and renderer failures. |
+| `formatDateTime` | `(date: Date) => string` | UTC `Tue Mar 05 2024 12:30` | Text for date nodes. The default ignores the machine's time zone so output is deterministic. |
 
-### Custom Nodes
+For many documents, build a renderer once:
 
-<details>
-<summary>The editor includes 20 custom node types:</summary>
+```ts
+import { createRenderer } from "@scottjgilbert/lexical-blog-editor/render";
+const renderer = createRenderer({ theme: { paragraph: "prose-p" } });
+renderer.renderToHtml(json);
+renderer.renderToTree(json); // the sanitized tree (HNode[])
+```
 
-- AutoLinkNode, LinkNode
-- CodeNode, CodeHighlightNode
-- CollapsibleContainerNode, CollapsibleContentNode, CollapsibleTitleNode
-- DateTimeNode
-- EmojiNode
-- EquationNode
-- FigmaNode
-- HashtagNode
-- HeadingNode, QuoteNode
-- HorizontalRuleNode
-- ImageNode
-- KeywordNode
-- LayoutContainerNode, LayoutItemNode
-- ListNode, ListItemNode
-- MarkNode
-- OverflowNode
-- SpecialTextNode
-- TableNode, TableCellNode, TableRowNode
-- TweetNode
-- YouTubeNode
+Input can be the saved JSON string, the parsed object, or a Lexical `EditorState`. Invalid input throws
+`InvalidEditorStateError`; the viewers catch it and show an error element (`LexicalBlogViewer__Error`).
 
-</details>
+### `<Viewer>` extras
+
+| Prop | Description |
+| --- | --- |
+| `renderer` | A prebuilt `createRenderer()` result. |
+| `replace(element, { render })` | Swap any element for your own component, e.g. real tweets with `react-tweet`. |
+| `className`, `as` | Wrapper class and tag. |
+| `fallback`, `onError` | Error UI and reporting. |
+
+```tsx
+import { Tweet } from "react-tweet";
+<Viewer
+  state={json}
+  replace={(el) =>
+    el.props["data-lexical-tweet-id"] ? <Tweet id={String(el.props["data-lexical-tweet-id"])} /> : undefined
+  }
+/>;
+```
+
+## Sanitization
+
+Sanitization is **on by default in every viewer and the headless renderer**. It works on the intermediate tree before any
+HTML string, React element or DOM node exists, so it needs no DOM and cannot be bypassed by parser differentials.
+
+- Only allowlisted tags and attributes survive; `on*` handlers, `<script>`, `<style>`, `<svg>`, forms and unknown tags are dropped.
+- URLs (`href`, `src`, `poster`): `http`, `https`, `mailto`, `tel`, relative and `#fragment` only. Whitespace/control-character
+  tricks (`java\tscript:`) are normalized away. `data:` is accepted only for raster images in `<img src>`.
+- `<iframe>` must match an allowlist (YouTube, Figma, Vimeo, X/Twitter by default) — host boundaries are checked, so
+  `youtube.com.evil.test` fails. Extend with `sanitizePolicy.iframeAllowlist`.
+- `style` is reduced to an allowlist of CSS properties; `url()`, `expression()`, `var()`, comments and escapes are rejected.
+- `target="_blank"` links always get `rel="noopener noreferrer"`.
+- `id`/`name` are removed (DOM clobbering); opt back in with `sanitizePolicy.allowAttributes: ["id"]`.
+- Text is escaped on output; unknown node types render their children only.
+
+Hostile corpora (javascript: URLs, attribute/class/style/iframe injection, prototype-pollution node types, 3000-deep
+documents…) are tested in every environment and output format.
+
+## Editor
+
+```tsx
+<Editor
+  placeholder="Write…"
+  initialState={savedJson}
+  onChange={(state) => save(JSON.stringify(state.toJSON()))}
+  onUpload={uploadToMyStorage}          // media uploads
+  onUploadEvent={(e) => track(e)}       // start / progress / success / error / abort
+  extensions={[calloutEditor]}          // blog-editor extensions
+  lexicalExtensions={[myLexicalExt]}    // plain Lexical extensions
+  onReady={(editor) => (window.editor = editor)}
+>
+  <MyLexicalPlugin />                   {/* any Lexical React plugin */}
+</Editor>
+```
+
+| Prop | Type | Description |
+| --- | --- | --- |
+| `onChange` | `(state: EditorState) => void` | **Required.** Fires on every update. |
+| `placeholder` | `string` | Empty-state text. |
+| `initialState` | `EditorState \| string` | Saved JSON or state. A short welcome document is used when omitted. |
+| `onUpload` | `MediaUploadHandler` | Upload handler (see below). |
+| `onUploadEvent` | `(event: UploadEvent) => void` | Lifecycle events for every file. |
+| `kinds` | `("image" \| "video" \| "audio" \| "file")[]` | Enabled media kinds (default all). |
+| `accept` | `Partial<Record<MediaKind, string[]>>` | Override accepted MIME patterns per kind. |
+| `maxFileSize` | `number \| Partial<Record<MediaKind, number>>` | Size limit in bytes. |
+| `extensions` | `EditorExtension[]` | Blog-editor extensions. Pass a stable array. |
+| `lexicalExtensions` | `AnyLexicalExtensionArgument[]` | Plain Lexical extensions, installed as dependencies. |
+| `children` | `ReactNode` | Extra Lexical plugins rendered inside the composer. |
+| `onReady` | `(editor: LexicalEditor) => void` | Receives the Lexical editor once. |
+
+The editor needs a browser. `<Editor>` renders a lightweight placeholder on the server and during hydration and mounts the
+real editor on the client, so it is safe in Next.js, Remix and other SSR setups.
+
+### Media uploads
+
+Drop, paste, the toolbar and the slash menu all funnel into one pipeline. Provide a handler that stores the file and
+returns its URL:
+
+```ts
+import type { MediaUploadHandler } from "@scottjgilbert/lexical-blog-editor/editor";
+
+const onUpload: MediaUploadHandler = async (file, { signal, onProgress, kind }) => {
+  const body = new FormData();
+  body.set("file", file);
+  const res = await fetch("/api/upload", { method: "POST", body, signal });
+  if (!res.ok) throw new Error(`Upload failed (${res.status})`);
+  onProgress(1);
+  const { url } = await res.json();
+  return url; // or { src: url, width, height, poster, altText, ... }
+};
+```
+
+While a file uploads, a placeholder with progress and a cancel button sits in the document; on success it is replaced with
+an image, video, audio or file-attachment node, on failure it disappears. Placeholders are never rendered by the viewers,
+and deleting one cancels its upload (`signal` aborts).
+
+Events (also available through `onUploadEvent`):
+
+```ts
+type UploadEvent =
+  | { type: "start";    id; file; kind; pending }
+  | { type: "progress"; id; file; kind; pending; progress /* 0..1 */ }
+  | { type: "success";  id; file; kind; pending; result }
+  | { type: "error";    id; file; kind; pending; error; reason /* handler-error | no-handler | too-large | type-not-accepted */ }
+  | { type: "abort";    id; file; kind; pending };
+```
+
+`pending` is the number of uploads still in flight, handy for disabling a Save button.
+
+Without `onUpload`, images are inlined as data URLs (capped at 5 MB) and other media is rejected with
+`reason: "no-handler"`.
+
+Build your own upload UI with the command the built-in UI uses:
+
+```ts
+import { UPLOAD_MEDIA_COMMAND } from "@scottjgilbert/lexical-blog-editor/editor";
+editor.dispatchCommand(UPLOAD_MEDIA_COMMAND, { files: [file], altText: "A cat" });
+```
+
+## Extensions
+
+Extensibility has two independent halves so server bundles never see editor code:
+
+| Half | Import path (by convention) | Runs in | Defines |
+| --- | --- | --- | --- |
+| **Render** | `my-extension/render` | server, edge, browser | how a node type becomes HTML/JSX |
+| **Editor** | `my-extension/editor` | browser | the Lexical node, plugin, menu entries, theme |
+
+Plain Lexical extensions (`defineExtension`, `configExtension`) work as usual through `lexicalExtensions`, and any Lexical
+React plugin can be passed as `<Editor>` children. `defineEditorExtension` bundles the pieces specific to this editor.
+
+### Editor half
+
+```tsx
+import { defineEditorExtension } from "@scottjgilbert/lexical-blog-editor/editor";
+
+export const myEditor = defineEditorExtension({
+  name: "my-extension",
+  nodes: [MyNode],                                  // Lexical node classes
+  theme: { paragraph: "my-paragraph" },             // deep-merged into the editor theme
+  html: { import: {…}, export: new Map() },         // DOM import/export (copy & paste)
+  plugins: [MyPlugin],                              // React components inside the composer
+  slashMenu: [{ title: "My block", keywords: ["x"], onSelect: ({ editor, showModal }) => … }],
+  insertMenu: [{ title: "My block", onSelect: ({ editor }) => … }],
+  lexicalExtensions: [somePlainLexicalExtension],   // installed as dependencies
+  dependencies: [otherEditorExtension],             // installed first
+});
+```
+
+### Render half
+
+```ts
+import { defineRenderExtension, h } from "@scottjgilbert/lexical-blog-editor";
+
+export const myRender = defineRenderExtension({
+  name: "my-extension",
+  nodes: {
+    callout: (node, ctx) => h("aside", { class: "callout" }, ctx.renderChildren(node)),
+  },
+  theme: { callout: "callout" },                    // extra class names
+  sanitize: { iframeAllowlist: ["https://maps.example.com/embed/"] },
+});
+
+renderToHtml(json, { extensions: [myRender] });
+<Viewer state={json} extensions={[myRender]} />;
+mountViewer(el, json, { extensions: [myRender] });
+```
+
+A renderer receives plain JSON and returns `h(tag, props, children)` nodes; its output goes through the same sanitizer as
+built-ins, so a buggy or hostile extension cannot emit scripts. Later extensions override earlier ones and the built-ins
+(listing your own after a packaged one overrides it). A renderer that throws is isolated to its node and reported via
+`onWarning`.
+
+### Distributing an extension
+
+Publish it as its own package next to the core, the way Lexical does with `@lexical/*`. The repository ships a complete
+reference, [`@scottjgilbert/lexical-blog-editor-ext-callout`](../ext-callout), with `./render`, `./editor` and `./styles.css`
+entry points; copy it as a template. A future AI-autocomplete package would follow the same shape: an editor half
+(`plugins` for the suggestion UI, `lexicalExtensions` for key handling) and, if it adds node types, a render half.
+
+## Built-in content
+
+Headings, paragraphs, quotes, lists and checklists, links and auto-links, code blocks (Shiki highlighting is stored in the
+JSON, so viewers need no highlighter), tables (merged cells, widths, header cells), images with captions, **video, audio and
+file attachments**, YouTube / X (Twitter) / Figma embeds, equations, horizontal rules, collapsible sections, multi-column
+layouts, dates, mentions, hashtags, keywords and emojis. Editor features: floating toolbars, markdown shortcuts, slash
+menu, drag handle, table tools, speech-to-text, history and more.
+
+Equations render as their LaTeX source until you opt into typesetting:
+
+```ts
+import { katexRenderExtension } from "@scottjgilbert/lexical-blog-editor/render/katex";
+renderToHtml(json, { extensions: [katexRenderExtension] }); // and include katex/dist/katex.min.css
+```
 
 ## Styling
 
-See the [Styling Guide](./docs/styling.md) for details on editor and viewer styling. The viewer ships with two style bundles:
+See the [styling guide](../../docs/styling.md). All viewers emit the same class names (`ViewerTheme__*`); import
+`styles/ViewerTheme.css` (minimal) and optionally `styles/ViewerThemeComplete.css`, or supply your own via `theme`.
 
-- `@scottjgilbert/lexical-blog-editor/styles/ViewerTheme.css`
-- `@scottjgilbert/lexical-blog-editor/styles/ViewerThemeComplete.css`
+## Testing
 
-## TypeScript Support
+The repository tests the published artifact, not just the source:
 
-This package is written in TypeScript and includes full type definitions. All exports are typed:
+- **Differential tests** render fixtures from real editor nodes with both Lexical's own `exportDOM` and this renderer and
+  require identical documents (deliberate deviations are listed in the test).
+- **Cross-environment goldens**: one fixture corpus, one golden HTML file per fixture; Node, jsdom and Vercel's
+  edge-runtime VM must reproduce it byte-for-byte; React markup, the HTML viewer and hydration must agree.
+- **Native Node**: real ESM `import` and CommonJS `require`, Express apps (ESM and CJS) over HTTP, a Web-standard handler in
+  the edge VM.
+- **Browser e2e (Playwright)**: the editor (typing, shortcuts, slash menu, extensions, uploads by picker/paste/command,
+  cancel, failure, limits) and a Next.js app (RSC with JS disabled, SSR + hydration, Node and Edge route handlers).
+- **Bundle tests** assert each entry point's dependency footprint and size.
 
-```tsx
-import type { EditorProps } from "@scottjgilbert/lexical-blog-editor";
-import type { EditorState } from "@scottjgilbert/lexical-blog-editor";
-```
+See [`docs/testing.md`](../../docs/testing.md).
+
+## Migrating from v1
+
+| v1 | v2 |
+| --- | --- |
+| `import { Editor } from "…"` | `import { Editor } from "…/editor"` and **`import "…/editor/styles.css"`** (CSS is no longer injected by the JS). |
+| `import { Viewer } from "…/viewer"` | `import { Viewer } from "…/react"`. No jsdom, no global `window` hack on the server. |
+| `Viewer` swapped tweets for `react-tweet` | Tweets render as a link; use `replace` to bring `react-tweet` back (above). |
+| Equations typeset with KaTeX | Opt in with `render/katex`. |
+| DOMPurify + `strip-html` over the HTML/JSON | Allowlist sanitizer over the render tree (JSON content such as code containing `<div>` is no longer mangled). |
+| `Viewer` `sanitize` prop | Unchanged (`sanitize={false}` opts out). |
+| Figma embeds rendered empty; YouTube embeds were stripped by the allowlist | Both render. |
+| Closed collapsibles rendered open | `open` is only emitted when open. |
+| Date nodes used the server's local time | Deterministic UTC text (override with `formatDateTime`). |
+| Sample-image button in the image dialog | Removed (URL and File remain; File now goes through the upload API). |
+| Dependencies: `jsdom`, `dompurify`, `html-react-parser`, `react-tweet`, `@igorskyflyer/strip-html`, `y-websocket` | Removed. |
+| CommonJS `require` of the main entry was broken | Dual ESM + CJS for every entry point. |
 
 ## Contributing
 
-This is an open-source project. Contributions, issues, and feature requests are welcome!
+This repository is a pnpm workspace; see the [root README](../../README.md) and
+[`docs/architecture.md`](../../docs/architecture.md).
 
 ## Acknowledgments
 
-Built on top of Meta's [Lexical](https://lexical.dev/) framework. This package is a modified wrapper of the Lexical Playground editor, tailored specifically for blog content creation.
+Built on Meta's [Lexical](https://lexical.dev/). The editor is derived from the Lexical Playground.
 
 ## License
 

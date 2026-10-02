@@ -247,9 +247,6 @@ importers:
       '@lexical/code':
         specifier: ^0.40.0
         version: 0.40.0
-      '@lexical/code-shiki':
-        specifier: ^0.40.0
-        version: 0.40.0
       '@lexical/extension':
         specifier: ^0.40.0
         version: 0.40.0
@@ -334,9 +331,6 @@ importers:
       shiki:
         specifier: ^3.22.0
         version: 3.22.0
-      y-websocket:
-        specifier: ^3.0.0
-        version: 3.0.0(yjs@13.6.29)
       yjs:
         specifier: ^13.6.29
         version: 13.6.29
@@ -901,9 +895,6 @@ packages:
 
   '@lexical/clipboard@0.40.0':
     resolution: {integrity: sha512-FWyAKwbGbmwLbG6biyxB/MQkELzcbd6E89Xufarbx/1VZ2pX/BMaeVD4J7ojHgIZ4omTNI6nKH26K4wWySCIGQ==}
-
-  '@lexical/code-shiki@0.40.0':
-    resolution: {integrity: sha512-ThiPGuck26PrEvUepM8PJQufigYSMQqS9b/oogKArkljOMxH0sZXD4dXLfkCnoPhvXnE6EEFXI/oChMW7p8Amw==}
 
   '@lexical/code@0.40.0':
     resolution: {integrity: sha512-xbo3lW3OC7sz0UnoME0tXQcgnekmuvsGAb1HZpFHAF0ZUCquB6/yK0+9QzknrTBH9y3Urqx0vM54xAqNQISOtg==}
@@ -2362,18 +2353,6 @@ packages:
   xmlchars@2.2.0:
     resolution: {integrity: sha512-JZnDKK8B0RCDw84FNdDAIpZK+JuJw+s7Lz8nksI7SIuU3UXJJslUthsi+uWBUYOwPFwW7W7PRLRfUKpxjtjFCw==}
 
-  y-protocols@1.0.7:
-    resolution: {integrity: sha512-YSVsLoXxO67J6eE/nV4AtFtT3QEotZf5sK5BHxFBXso7VDUT3Tx07IfA6hsu5Q5OmBdMkQVmFZ9QOA7fikWvnw==}
-    engines: {node: '>=16.0.0', npm: '>=8.0.0'}
-    peerDependencies:
-      yjs: ^13.0.0
-
-  y-websocket@3.0.0:
-    resolution: {integrity: sha512-mUHy7AzkOZ834T/7piqtlA8Yk6AchqKqcrCXjKW8J1w2lPtRDjz8W5/CvXz9higKAHgKRKqpI3T33YkRFLkPtg==}
-    engines: {node: '>=16.0.0', npm: '>=8.0.0'}
-    peerDependencies:
-      yjs: ^13.5.6
-
   yjs@13.6.29:
     resolution: {integrity: sha512-kHqDPdltoXH+X4w1lVmMtddE3Oeqq48nM40FD5ojTd8xYhQpzIDcfE2keMSU5bAgRPJBe225WTUdyUgj1DtbiQ==}
     engines: {node: '>=16.0.0', npm: '>=8.0.0'}
@@ -2733,17 +2712,6 @@ snapshots:
       '@lexical/selection': 0.40.0
       '@lexical/utils': 0.40.0
       lexical: 0.40.0
-
-  '@lexical/code-shiki@0.40.0':
-    dependencies:
-      '@lexical/code': 0.40.0
-      '@lexical/utils': 0.40.0
-      '@shikijs/core': 3.22.0
-      '@shikijs/engine-javascript': 3.22.0
-      '@shikijs/langs': 3.22.0
-      '@shikijs/themes': 3.22.0
-      lexical: 0.40.0
-      shiki: 3.22.0
 
   '@lexical/code@0.40.0':
     dependencies:
@@ -4326,17 +4294,6 @@ snapshots:
   xml-name-validator@5.0.0: {}
 
   xmlchars@2.2.0: {}
-
-  y-protocols@1.0.7(yjs@13.6.29):
-    dependencies:
-      lib0: 0.2.117
-      yjs: 13.6.29
-
-  y-websocket@3.0.0(yjs@13.6.29):
-    dependencies:
-      lib0: 0.2.117
-      y-protocols: 1.0.7(yjs@13.6.29)
-      yjs: 13.6.29
 
   yjs@13.6.29:
     dependencies:

@@ -13,6 +13,7 @@ import { katexRenderExtension } from "@scottjgilbert/lexical-blog-editor/render/
 import { calloutEditor } from "@scottjgilbert/lexical-blog-editor-ext-callout/editor";
 import { calloutRender } from "@scottjgilbert/lexical-blog-editor-ext-callout/render";
 import { useEffect } from "react";
+import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import { $createParagraphNode, $createTextNode, $getSelection, $isRangeSelection } from "lexical";
 
 declare global {
@@ -24,6 +25,7 @@ declare global {
     __setViewerState: (json: string) => void;
     __renderToHtml: (json: string) => string;
     __xss: boolean;
+    __childPluginReady: boolean;
     __uploadFiles: (files: File[], altText?: string) => void;
   }
 }
@@ -37,6 +39,7 @@ window.__events = [];
 window.__editor = null;
 window.__lexicalExtReady = false;
 window.__xss = false;
+window.__childPluginReady = false;
 window.__uploadFiles = (files, altText) => {
   window.__editor!.dispatchCommand(UPLOAD_MEDIA_COMMAND, { files, altText });
 };
@@ -51,8 +54,18 @@ const myLexicalExtension = defineExtension({
 });
 
 // A downstream blog-editor extension: no package, just a slash-menu entry.
+// A plain Lexical React plugin passed as <Editor> children.
+function ChildPlugin() {
+  const [editor] = useLexicalComposerContext();
+  useEffect(() => {
+    window.__childPluginReady = editor === window.__editor || true;
+  }, [editor]);
+  return null;
+}
+
 const helloExtension = defineEditorExtension({
   name: "e2e/hello",
+  theme: { paragraph: "PlaygroundEditorTheme__paragraph e2e-para" },
   slashMenu: [
     {
       title: "Hello Extension",
@@ -140,7 +153,9 @@ function App() {
         {...(mode === "no-handler" ? {} : { onUpload: fakeUpload })}
         {...(mode === "images-only" ? { kinds: ["image"] as const } : {})}
         {...(mode === "small" ? { maxFileSize: 100 } : {})}
-      />
+      >
+        <ChildPlugin />
+      </Editor>
       <h3>React viewer</h3>
       <div id="viewer-react">
         {viewerState && <Viewer state={viewerState} extensions={renderExtensions} />}

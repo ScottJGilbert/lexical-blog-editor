@@ -79,6 +79,19 @@ test.describe("extensions", () => {
     expect(await page.evaluate(() => window.__lexicalExtReady)).toBe(true);
   });
 
+  test("plain Lexical React plugins can be passed as <Editor> children", async ({ page }) => {
+    await open(page);
+    expect(await page.evaluate(() => window.__childPluginReady)).toBe(true);
+  });
+
+  test("an extension's theme is merged into the editor theme", async ({ page }) => {
+    await open(page);
+    await type(page, "themed");
+    await expect(editorBox(page).locator("p.e2e-para")).toContainText("themed");
+    // ...and the built-in theme classes are still there.
+    await expect(editorBox(page).locator("p.PlaygroundEditorTheme__paragraph")).toHaveCount(1);
+  });
+
   test("a downstream editor extension adds a slash-menu entry", async ({ page }) => {
     await open(page);
     await editorBox(page).click();

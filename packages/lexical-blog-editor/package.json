@@ -105,7 +105,6 @@
     "@floating-ui/react": "^0.27.17",
     "@lexical/clipboard": "^0.40.0",
     "@lexical/code": "^0.40.0",
-    "@lexical/code-shiki": "^0.40.0",
     "@lexical/extension": "^0.40.0",
     "@lexical/file": "^0.40.0",
     "@lexical/hashtag": "^0.40.0",
@@ -131,7 +130,6 @@
     "react-day-picker": "^9.13.0",
     "react-error-boundary": "^6.1.0",
     "shiki": "^3.22.0",
-    "y-websocket": "^3.0.0",
     "yjs": "^13.6.29"
   },
   "devDependencies": {
