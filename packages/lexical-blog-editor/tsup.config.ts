@@ -65,6 +65,7 @@ export default defineConfig([
     platform: "browser",
     // One bundle => one stylesheet (dist/editor/index.css) covering lazy parts too.
     splitting: false,
+    sourcemap: false, // the editor bundle's map is >1.5 MB per format
     // rollup's tree-shaking pass would drop the "use client" banner.
     treeshake: false,
     banner: { js: '"use client";' },

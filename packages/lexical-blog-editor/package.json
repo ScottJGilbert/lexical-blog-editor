@@ -156,5 +156,24 @@
       "optional": true
     }
   },
-  "type": "module"
+  "type": "module",
+  "typesVersions": {
+    "*": {
+      "render": [
+        "dist/render/index.d.ts"
+      ],
+      "render/katex": [
+        "dist/render/katex.d.ts"
+      ],
+      "react": [
+        "dist/react/index.d.ts"
+      ],
+      "html": [
+        "dist/html/index.d.ts"
+      ],
+      "editor": [
+        "dist/editor/index.d.ts"
+      ]
+    }
+  }
 }

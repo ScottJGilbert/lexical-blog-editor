@@ -41,7 +41,7 @@ pnpm typecheck
 pnpm check:boundaries   # layering rules
 pnpm test               # unit, oracle, cross-environment, native Node, Express, edge VM
 pnpm test:e2e           # Playwright: Vite SPA and Next.js (needs a Chromium; CI installs it)
-pnpm ci                 # everything above
+pnpm verify             # everything above (+ pack smoke test)
 ```
 
 Playwright is pinned to the version whose Chromium build is preinstalled in the cloud dev environment; elsewhere run
