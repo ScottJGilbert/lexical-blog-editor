@@ -4,6 +4,8 @@
  * the headless renderer in both the Node and Edge runtimes.
  */
 import { expect, test, type Page } from "@playwright/test";
+import { existsSync, readFileSync } from "node:fs";
+import { join } from "node:path";
 import { fixtureNames, readFixture } from "../helpers/fixtures";
 import { goldenFor } from "../helpers/golden";
 import { hostile } from "../helpers/hostile";
@@ -48,7 +50,8 @@ test.describe("React Server Component viewer", () => {
     });
   }
 
-  test("ships no editor code to the browser (tree-shaking holds under Next)", async ({ page }) => {
+  /** Fetches every script a page loads and returns their sizes and bodies. */
+  async function scriptsOf(page: Page, path: string) {
     const scripts: { url: string; bytes: number; body: string }[] = [];
     page.on("response", async (res) => {
       if (res.request().resourceType() === "script") {
@@ -56,16 +59,27 @@ test.describe("React Server Component viewer", () => {
         scripts.push({ url: res.url(), bytes: body.length, body });
       }
     });
-    await page.goto("/rsc/headings-quote");
+    await page.goto(path);
     await page.waitForLoadState("networkidle");
+    return scripts;
+  }
+
+  test("ships no editor code to the browser (tree-shaking holds under Next)", async ({ page, browser }, testInfo) => {
+    // Dev servers ship unminified runtimes, HMR clients and source-derived names.
+    const dev = testInfo.project.metadata.mode === "dev";
+    const scripts = await scriptsOf(page, "/rsc/headings-quote");
     expect(scripts.length).toBeGreaterThan(0); // Next's own runtime
     for (const s of scripts) {
       expect(s.body, s.url).not.toContain("registerUpdateListener"); // Lexical core
       expect(s.body, s.url).not.toContain("LexicalComposer");
-      expect(s.body, s.url).not.toContain("katex");
+      if (!dev) expect(s.body, s.url).not.toContain("katex");
     }
-    const total = scripts.reduce((n, s) => n + s.bytes, 0);
-    expect(total).toBeLessThan(400_000);
+    if (dev) return;
+    // The budget is relative: Next's own runtime differs between majors, and the
+    // viewer page must cost (almost) nothing on top of a page that ignores the package.
+    const baseline = await scriptsOf(await (await browser.newContext()).newPage(), "/baseline");
+    const sum = (list: { bytes: number }[]) => list.reduce((n, s) => n + s.bytes, 0);
+    expect(sum(scripts) - sum(baseline)).toBeLessThan(2_000);
   });
 
   test("extensions render on the server (callout, KaTeX)", async ({ page }) => {
@@ -106,6 +120,9 @@ test.describe("client editor under SSR", () => {
 
 for (const [route, runtime] of [["/api/render", "node"], ["/api/edge", "edge"]] as const) {
   test.describe(`${route} (${runtime} runtime)`, () => {
+    test.beforeEach(({}, testInfo) => {
+      test.skip(runtime === "edge" && testInfo.project.metadata.edge === false, "this host has no Edge runtime");
+    });
     const post = (request: any, state: unknown) => request.post(route, { data: { state } });
 
     test("renders every fixture exactly like the golden output", async ({ request }) => {
@@ -132,3 +149,15 @@ for (const [route, runtime] of [["/api/render", "node"], ["/api/edge", "edge"]] 
     });
   });
 }
+
+test.describe("deployment size (Cloudflare Workers)", () => {
+  test("the deployable worker fits its size budget", async ({}, testInfo) => {
+    const limit = testInfo.project.metadata.maxWorkerGzipKiB as number | undefined;
+    test.skip(limit === undefined, "only measured for the OpenNext/Cloudflare targets");
+    const file = join(__dirname, "..", "..", "e2e", "apps", "next-cloudflare", ".open-next", "size.json");
+    expect(existsSync(file), "run `pnpm run cf:build` first").toBe(true);
+    const size = JSON.parse(readFileSync(file, "utf8"));
+    console.info(`worker upload (${size.variant}): ${size.rawKiB} KiB raw, ${size.gzipKiB} KiB gzip; budget ${limit} KiB gzip`);
+    expect(size.gzipKiB).toBeLessThan(limit!);
+  });
+});

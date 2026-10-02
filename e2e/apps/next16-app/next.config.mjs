@@ -4,10 +4,8 @@ const root = new URL("../../../", import.meta.url).pathname;
 export default {
   reactStrictMode: true,
   typescript: { ignoreBuildErrors: true },
-  eslint: { ignoreDuringBuilds: true },
-  // Separate output folders let the webpack build and the Turbopack builds coexist.
   distDir: process.env.NEXT_DIST_DIR || ".next",
-  // The package ships ESM + CJS; Next must be able to consume it as published.
+  // The package is consumed through pnpm workspace symlinks that point outside the app.
   outputFileTracingRoot: root,
   turbopack: { root },
 };

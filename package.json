@@ -11,6 +11,9 @@
     "test:unit": "vitest run --project unit",
     "test:envs": "vitest run --project node --project jsdom --project edge",
     "test:e2e": "playwright test",
+    "test:lab:workerd": "vitest run -c vitest.lab.config.ts",
+    "test:lab:next": "node scripts/lab-next.mjs",
+    "test:lab": "pnpm test:lab:workerd && pnpm test:lab:next",
     "verify": "pnpm build && pnpm typecheck && pnpm check:boundaries && pnpm test && pnpm test:pack && pnpm test:e2e",
     "test:pack": "node scripts/pack-smoke.mjs"
   },
@@ -45,6 +48,8 @@
     "react-dom": "^19",
     "tsup": "^8.5.1",
     "typescript": "^5.9",
-    "vitest": "^3.2.7"
+    "vitest": "^3.2.7",
+    "workerd": "1.20261001.1",
+    "wrangler": "^4.146.0"
   }
 }

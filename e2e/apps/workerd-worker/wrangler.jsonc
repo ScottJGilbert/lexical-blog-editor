@@ -1,0 +1,6 @@
+{
+  // Bundled exactly like a real deploy (`wrangler deploy --dry-run`), then run by workerd.
+  "name": "lexical-blog-editor-lab",
+  "main": "worker.mjs",
+  "compatibility_date": "2025-09-01"
+}

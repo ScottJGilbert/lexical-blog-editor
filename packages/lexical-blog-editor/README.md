@@ -222,6 +222,25 @@ documents…) are tested in every environment and output format.
 The editor needs a browser. `<Editor>` renders a lightweight placeholder on the server and during hydration and mounts the
 real editor on the client, so it is safe in Next.js, Remix and other SSR setups.
 
+#### Next.js and serverless
+
+- **Bundle size on Cloudflare Workers.** A client component that imports `Editor` directly puts the editor's whole module
+  graph (Lexical, `shiki` grammars, `prettier` parsers) into Next's *server* bundle. Built with OpenNext that made the worker
+  34.9 MiB / 6.5 MiB gzipped, which only fits the paid plan. Loading the editor client-only keeps the server bundle at
+  ~1.1 MiB gzipped (renderer + viewer included):
+
+  ```tsx
+  "use client";
+  import dynamic from "next/dynamic";
+
+  // ./ClientEditor.tsx is a client component that imports <Editor> and your extensions.
+  const ClientEditor = dynamic(() => import("./ClientEditor"), { ssr: false });
+  ```
+
+  The viewers and the headless renderer are unaffected; they are small and server-safe.
+- **Turbopack (Next 15.5) with pnpm** prints "Package prettier/shiki can't be external" warnings for the editor entry. They
+  are harmless; add `prettier` and `shiki` to your app's `dependencies` to silence them. Next 16 does not print them.
+
 ### Media uploads
 
 Drop, paste, the toolbar and the slash menu all funnel into one pipeline. Provide a handler that stores the file and

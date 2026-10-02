@@ -67,3 +67,25 @@ jobs:
             playwright-report
             test-results
           retention-days: 7
+
+  lab:
+    name: Lab (real workerd, Next.js Turbopack, Next.js on workerd)
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm test:lab
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: lab-test-results
+          path: test-results
+          retention-days: 7

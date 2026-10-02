@@ -1,13 +1,14 @@
 {
-  "name": "e2e-next-app",
+  "name": "e2e-next16-app",
   "private": true,
   "version": "0.0.0",
+  "description": "Same app code as next-app (copied by sync-app.mjs), on Next.js 16 where Turbopack is the default bundler.",
   "scripts": {
-    "build": "next build",
-    "start": "next start -p 4174",
-    "build:turbo": "next build --turbopack",
-    "start:turbo": "next start",
-    "dev:turbo": "next dev --turbopack"
+    "sync": "node ../sync-app.mjs next-app next16-app",
+    "build": "pnpm run sync && next build",
+    "build:webpack": "pnpm run sync && next build --webpack",
+    "start": "next start",
+    "dev": "pnpm run sync && next dev"
   },
   "dependencies": {
     "@scottjgilbert/lexical-blog-editor": "workspace:*",
@@ -16,9 +17,9 @@
     "@lexical/utils": "^0.40.0",
     "katex": "^0.16.28",
     "lexical": "^0.40.0",
-    "next": "^15.5.0",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "next": "^16.3.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
   },
   "devDependencies": {
     "@types/node": "^20",

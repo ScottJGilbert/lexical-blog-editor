@@ -145,3 +145,23 @@ vite.config.ts.timestamp-*
 test-results/
 playwright-report/
 .e2e-tmp/
+
+# next16-app is generated from next-app by e2e/apps/sync-app.mjs
+e2e/apps/next16-app/app/
+.next-*/
+
+# next-cloudflare is generated from next-app by e2e/apps/next-cloudflare/prepare.mjs
+e2e/apps/next-cloudflare/app/
+e2e/apps/next-cloudflare/.open-next/
+e2e/apps/next-cloudflare/.wrangler/
+
+e2e/apps/next-cloudflare/.wrangler-dry-run/
+
+# wrangler local state and Next-generated agent notes
+**/.wrangler/
+e2e/apps/next16-app/AGENTS.md
+e2e/apps/next16-app/CLAUDE.md
+e2e/apps/next-cloudflare/AGENTS.md
+e2e/apps/next-cloudflare/CLAUDE.md
+e2e/apps/next16-app/next-env.d.ts
+e2e/apps/next-cloudflare/next-env.d.ts
